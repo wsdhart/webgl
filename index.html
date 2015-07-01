@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <title>Interactive Computer Graphics with WebGL (UNM)</title>
+    <noscript>JavaScript is required to view this page's content.</noscript>
+  </head>
+  <body>
+    <div align="center">
+      <canvas id="webgl-canvas" width="256" height="256">
+	<img src="images/unpassable.png"/>
+	HTML5 is required to view this page's content.
+      </canvas>
+      <script type="text/javascript">
+	var canvas = document.getElementById("webgl-canvas");
+	var context = canvas.getContext("2d");
+	var img = new Image();
+	img.src = "images/unpassable.png";
+	img.onload = function()
+	{
+		context.drawImage(img , 0 , 0);
+	};
+      </script>
+    </div>
+  </body>
+</html>
