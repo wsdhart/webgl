@@ -1,6 +1,6 @@
 "use strict";
 
-var sides = 7;
+var sides = 11;
 
 window.onload = function init()
 {
@@ -9,7 +9,7 @@ window.onload = function init()
     if(!gl){ alert("Failed initialising WebGL"); }
 
     setup(canvas , gl);
-    render(canvas , gl);
+    render(gl);
 }
 
 function setup(canvas , gl)
@@ -27,12 +27,14 @@ function setup(canvas , gl)
     var colors = create_colors(sides);
     bind_buffer(gl , colors);
     bind_attribute(gl , program , "v_color" , 3);
+
+    return vertices;
 }
 
-function render(canvas , gl)
+function render(gl)
 {
     gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.drawArrays(gl.TRIANGLE_FAN , 0 , sides);
+    gl.drawArrays(gl.TRIANGLES , 0 , sides * 3);
 }
 
 function create_polygon(faces)
@@ -40,11 +42,15 @@ function create_polygon(faces)
     var nodes = [];
     var pos = Math.PI / 2;
     var angle = (2 * Math.PI) / faces;
-    for(var i = 0 ; i < (faces * 2) ; i+=2)
+    for(var i = 0 ; i < (faces * 6) ; i+=6)
     {
-	nodes[i] = Math.cos(pos);
-	nodes[i + 1] = Math.sin(pos);
+	nodes[i] = 0.0;
+	nodes[i + 1] = 0.0;
+	nodes[i + 2] = Math.cos(pos);
+	nodes[i + 3] = Math.sin(pos);
 	pos -= angle;
+	nodes[i + 4] = Math.cos(pos);
+	nodes[i + 5] = Math.sin(pos);
     }
 
     var polygon = new Float32Array(nodes);
@@ -58,9 +64,12 @@ function create_colors(faces)
     for(var i = 0 ; i < faces ; i++)
     {
 	var i_step = i * step;
-	colors.push(i_step);
-	colors.push(i_step);
-	colors.push(i_step);
+	for(var j = 0 ; j < 3 ; j++)
+	{
+	    colors.push(i_step);
+	    colors.push(i_step);
+	    colors.push(i_step);
+	}
     }
     colors = new Float32Array(colors);
     return colors;
