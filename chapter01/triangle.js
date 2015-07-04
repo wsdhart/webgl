@@ -29,7 +29,7 @@ function setup(canvas , gl)
     bind_buffer(gl , polygon);
     bind_attribute(gl, program , "v_position" , 2);
 
-    var colors = create_colors(vertices.length / 3);
+    var colors = create_colors(vertices.length / 6);
     bind_buffer(gl , colors);
     bind_attribute(gl , program , "v_color" , 3);
 
