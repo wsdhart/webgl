@@ -2,6 +2,7 @@
 
 var sides = 11;
 var subdivisions = 4;
+var holes = false;
 
 window.onload = function init()
 {
@@ -90,7 +91,7 @@ function split_vertices(vertices)
 	var y2 = vertices[i + 3];
 	var x3 = vertices[i + 4];
 	var y3 = vertices[i + 5];
-	var split = split_triangle(x1 , y1 , x2 , y2 , x3 , y3 , false);
+	var split = split_triangle(x1 , y1 , x2 , y2 , x3 , y3 , !holes);
 	for(var j = 0 ; j < split.length ; j++)
 	    nodes.push(split[j]);
     }
