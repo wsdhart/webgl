@@ -25,7 +25,7 @@ function setup(canvas , gl)
     var vertices = create_polygon(sides);
     for(var i = 0 ; i < subdivisions ; i++)
 	vertices = split_vertices(vertices , holes);
-    vertices = rotate_points(vertices , Math.PI / 2);
+    vertices = twist_points(vertices , Math.PI / 2);
     bind_buffer(gl , vertices);
     bind_attribute(gl, program , "v_position" , 2);
 
@@ -63,6 +63,24 @@ function rotate_points(vertices , angle)
     {
 	var x = vertices[i];
 	var y = vertices[i + 1];
+	var xp = (x * sin) + (y * cos);
+	var yp = (x * cos) - (y * sin);
+	vertices[i] = xp;
+	vertices[i + 1] = yp;
+    }
+    return vertices;
+}
+
+function twist_points(vertices , angle)
+{
+    for(var i = 0 ; i < vertices.length ; i+=2)
+    {
+	var x = vertices[i];
+	var y = vertices[i + 1];
+	var distance = Math.sqrt((x * x)+(y * y));
+	var delta = angle * distance;
+	var sin = Math.sin(delta);
+	var cos = Math.cos(delta);
 	var xp = (x * sin) + (y * cos);
 	var yp = (x * cos) - (y * sin);
 	vertices[i] = xp;
