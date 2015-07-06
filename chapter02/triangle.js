@@ -5,7 +5,7 @@ var subdivisions = 6;
 var holes = false;
 
 var update;
-var theta = 0.0;
+var theta = Math.PI / 20.0;
 
 window.onload = function init()
 {
@@ -52,7 +52,6 @@ function updater(gl , vertices , program)
     function inner()
     {
 	vertices = twist_points(vertices , -theta);
-	theta += Math.PI / 20.0;
 	vertices = twist_points(vertices , theta);
 	bind_buffer(gl , vertices);
 	bind_attribute(gl, program , "v_position" , 2);
