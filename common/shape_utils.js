@@ -2,6 +2,7 @@
 
 /**
  * Create and return the vertices of an n-sided polygon as a JavaScript array.
+ * The returned polygon is made up of triangles.
  * @param {faces} number of sides to create.
  * @return {nodes} the vertices of the polygon as a JavaScript array.
  */
