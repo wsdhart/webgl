@@ -62,7 +62,7 @@ function rotate_points(vertices , angle)
 	var x = vertices[i];
 	var y = vertices[i + 1];
 	var xp = (x * Math.sin(angle)) + (y * Math.cos(angle));
-	var yp = (x * (Math.cos(angle)) - (y * Math.sin(angle)));
+	var yp = (x * Math.cos(angle)) - (y * Math.sin(angle));
 	vertices[i] = xp;
 	vertices[i + 1] = yp;
     }
