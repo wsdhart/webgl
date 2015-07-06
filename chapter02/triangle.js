@@ -75,8 +75,8 @@ function create_colors(faces)
 
 function rotate_points(vertices , angle)
 {
-    var sin= Math.sin(angle);
-    var cos= Math.cos(angle);
+    var sin = Math.sin(angle);
+    var cos = Math.cos(angle);
     for(var i = 0 ; i < vertices.length ; i+=2)
     {
 	var x = vertices[i];
