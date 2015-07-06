@@ -1,8 +1,11 @@
 "use strict";
 
-var sides = 3;
-var subdivisions = 3;
-var holes = true;
+var sides = 6;
+var subdivisions = 6;
+var holes = false;
+
+var update;
+var theta = 0.0;
 
 window.onload = function init()
 {
@@ -25,13 +28,15 @@ function setup(canvas , gl)
     var vertices = create_polygon(sides);
     for(var i = 0 ; i < subdivisions ; i++)
 	vertices = split_vertices(vertices , holes);
-    vertices = twist_points(vertices , Math.PI / 2);
+
     bind_buffer(gl , vertices);
     bind_attribute(gl, program , "v_position" , 2);
 
     var colors = create_colors(vertices.length / 6);
     bind_buffer(gl , colors);
     bind_attribute(gl , program , "v_color" , 3);
+
+    update = updater(gl , vertices , program);
 
     return vertices;
 }
@@ -40,6 +45,20 @@ function render(gl , vertices)
 {
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.drawArrays(gl.TRIANGLES , 0 , vertices.length / 2);
+}
+
+function updater(gl , vertices , program)
+{
+    function inner()
+    {
+	vertices = twist_points(vertices , -theta);
+	theta += Math.PI / 20.0;
+	vertices = twist_points(vertices , theta);
+	bind_buffer(gl , vertices);
+	bind_attribute(gl, program , "v_position" , 2);
+	render(gl , vertices);
+    }
+    return inner;
 }
 
 function create_colors(faces)
