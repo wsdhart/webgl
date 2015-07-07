@@ -1,5 +1,11 @@
 "use strict";
 
+/**
+ * Creates and returns a JavaScript array containing WebGL compatible colors
+ * from a monochrome palette, enough to cover every 3 vertices.
+ * @param {faces} total number of vertices divided by 6.
+ * @return {colors} colors to bind to vertices.
+ */
 function create_colors(faces)
 {
     var colors = [];

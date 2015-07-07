@@ -1,5 +1,11 @@
 "use strict";
 
+/**
+ * Creates and returns a JavaScript array containing vertices rotated by angle.
+ * @param {vertices} vertices to rotate.
+ * @param {angle} angle in radians to rotate vertices by.
+ * @return {nodes} rotated vertices.
+ */
 function rotate_points(vertices , angle)
 {
     var nodes = [];
@@ -17,6 +23,12 @@ function rotate_points(vertices , angle)
     return nodes;
 }
 
+/**
+ * Creates and returns a JavaScript array containing vertices twisted by angle.
+ * @param {vertices} vertices to twist.
+ * @param {angle} angle in radians to twist vertices by.
+ * @return {nodes} twisted vertices.
+ */
 function twist_points(vertices , angle)
 {
     var nodes = [];
