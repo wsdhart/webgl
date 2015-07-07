@@ -1,62 +1,95 @@
 "use strict";
 
-var sides = 6;
-var subdivisions = 6;
-var holes = false;
+var gl;
+var polygon;
+var program;
+var vertex_buffer;
+var color_buffer;
 
-var update;
-var theta = Math.PI / 20.0;
+var sides = 3;
+var subdivisions = 0;
+var holes = false;
+var theta = 0.0;
 
 window.onload = function init()
 {
     var canvas = document.getElementById("webgl-canvas");
-    var gl = WebGLUtils.setupWebGL(canvas);
-    if(!gl){ alert("Failed initialising WebGL"); }
-
-    var vertices = setup(canvas , gl);
-    render(gl , vertices);
+    gl = WebGLUtils.setupWebGL(canvas);
+    if(gl)
+    {
+	setup();
+	render();
+    }
+    else
+    { alert("Failed initialising WebGL"); }
 }
 
-function setup(canvas , gl)
+function setup()
 {
     gl.viewport(0 , 0 , gl.drawingBufferWidth , gl.drawingBufferHeight);
     gl.clearColor(1.0 , 1.0 , 1.0 , 1.0);
 
-    var program = init_program(gl , "vertex-shader" , "fragment-shader");
+    program = init_program(gl , "vertex-shader" , "fragment-shader");
     gl.useProgram(program);
 
-    var vertices = create_polygon(sides);
-    for(var i = 0 ; i < subdivisions ; i++)
-	vertices = split_vertices(vertices , holes);
+    polygon = create_polygon(sides);
 
-    var vertex_buffer = bind_buffer(gl , vertices);
+    render();
+}
+
+function render(vertices)
+{
+    if(!vertices)
+	vertices = polygon;
+    vertex_buffer = bind_buffer(gl , vertices);
     bind_attribute(gl, program , "v_position" , 2);
 
-    var colors = create_colors(vertices.length / 6);
-    bind_buffer(gl , colors);
+    var colors = create_colors(polygon.length / 6);
+    color_buffer = bind_buffer(gl , colors , color_buffer);
     bind_attribute(gl , program , "v_color" , 3);
 
-    update = updater(gl , vertices , program , vertex_buffer);
-
-    return vertices;
-}
-
-function render(gl , vertices)
-{
     gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.drawArrays(gl.TRIANGLES , 0 , vertices.length / 2);
+    gl.drawArrays(gl.TRIANGLES , 0 , polygon.length / 2);
 }
 
-function updater(gl , vertices , program , buffer)
+function update_angle(angle)
 {
-    function inner()
-    {
-	vertices = twist_points(vertices , -theta);
-	vertices = twist_points(vertices , theta);
-	bind_buffer(gl , vertices , buffer);
-	bind_attribute(gl, program , "v_position" , 2);
-	render(gl , vertices);
-    }
-    return inner;
+    theta = (angle * Math.PI / 180.0);
+    var twisted = twist_points(polygon , theta);
+    render(twisted);
 }
 
+function update_serpinski(steps)
+{
+    if(steps > subdivisions)
+    {
+	var diff = steps - subdivisions;
+	for(var i = 0 ; i < diff ; i++)
+	    polygon = split_vertices(polygon , holes);
+	subdivisions = steps;
+	update_angle(theta * 180.0 / Math.PI);
+    }
+    else if(steps < subdivisions)
+    {
+	subdivisions = steps;
+	update_polygon(sides , true);
+    }
+}
+
+function update_polygon(faces , force)
+{
+    if(sides != faces || force)
+    {
+	polygon = create_polygon(faces);
+	sides = faces;
+	for(var i = 0 ; i < subdivisions ; i++)
+	    polygon = split_vertices(polygon , holes);
+	update_angle(theta * 180.0 / Math.PI);
+    }
+}
+
+function update_holes(aperture)
+{
+    holes = aperture;
+    update_polygon(sides , true);
+}
