@@ -63,9 +63,10 @@ function fetch_shader(gl , id , type)
  * @param {nodes} JavaScript array to be bound.
  * @return {buffer} bound buffer.
  */
-function bind_buffer(gl, nodes)
+function bind_buffer(gl, nodes , buffer)
 {
-    var buffer = gl.createBuffer();
+    if(!buffer)
+	buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER , buffer);
     gl.bufferData(gl.ARRAY_BUFFER , new Float32Array(nodes) , gl.STATIC_DRAW);
     return buffer;

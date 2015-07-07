@@ -29,14 +29,14 @@ function setup(canvas , gl)
     for(var i = 0 ; i < subdivisions ; i++)
 	vertices = split_vertices(vertices , holes);
 
-    bind_buffer(gl , vertices);
+    var vertex_buffer = bind_buffer(gl , vertices);
     bind_attribute(gl, program , "v_position" , 2);
 
     var colors = create_colors(vertices.length / 6);
     bind_buffer(gl , colors);
     bind_attribute(gl , program , "v_color" , 3);
 
-    update = updater(gl , vertices , program);
+    update = updater(gl , vertices , program , vertex_buffer);
 
     return vertices;
 }
@@ -47,13 +47,13 @@ function render(gl , vertices)
     gl.drawArrays(gl.TRIANGLES , 0 , vertices.length / 2);
 }
 
-function updater(gl , vertices , program)
+function updater(gl , vertices , program , buffer)
 {
     function inner()
     {
 	vertices = twist_points(vertices , -theta);
 	vertices = twist_points(vertices , theta);
-	bind_buffer(gl , vertices);
+	bind_buffer(gl , vertices , buffer);
 	bind_attribute(gl, program , "v_position" , 2);
 	render(gl , vertices);
     }
