@@ -102,6 +102,6 @@ function update_primitive(type)
     if(0 <= type && type <= 6)
     {
 	primitive = type;
-	render();
+	update_angle();
     }
 }
