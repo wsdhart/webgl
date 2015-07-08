@@ -11,6 +11,8 @@ var subdivisions = 0;
 var holes = false;
 var theta = 0.0;
 
+var to_radians = Math.PI / 180.0;
+
 window.onload = function init()
 {
     var canvas = document.getElementById("webgl-canvas");
@@ -52,7 +54,8 @@ function render(vertices)
 
 function update_angle(angle)
 {
-    theta = (angle * Math.PI / 180.0);
+    if(angle)
+	theta = angle * to_radians;
     var twisted = twist_points(polygon , theta);
     render(twisted);
 }
@@ -65,7 +68,7 @@ function update_serpinski(steps)
 	for(var i = 0 ; i < diff ; i++)
 	    polygon = split_vertices(polygon , holes);
 	subdivisions = steps;
-	update_angle(theta * 180.0 / Math.PI);
+	update_angle();
     }
     else if(steps < subdivisions)
     {
@@ -82,7 +85,7 @@ function update_polygon(faces , force)
 	sides = faces;
 	for(var i = 0 ; i < subdivisions ; i++)
 	    polygon = split_vertices(polygon , holes);
-	update_angle(theta * 180.0 / Math.PI);
+	update_angle();
     }
 }
 
