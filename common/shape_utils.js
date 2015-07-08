@@ -54,8 +54,7 @@ function split_vertices(vertices , holes)
 	var x3 = vertices[i + 4];
 	var y3 = vertices[i + 5];
 	var split = split_triangle(x1 , y1 , x2 , y2 , x3 , y3 , holes);
-	for(var j = 0 ; j < split.length ; j++)
-	    nodes.push(split[j]);
+	nodes.concat(split);
     }
     return nodes;
 }
