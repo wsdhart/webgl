@@ -33,8 +33,6 @@ function setup()
     gl.useProgram(program);
 
     polygon = create_polygon(sides);
-
-    render();
 }
 
 function render(vertices)
