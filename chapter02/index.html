@@ -39,21 +39,9 @@
     </div>
     <table>
       <tr>
-	<td colspan="2">
-	  <select id="primitive" onchange="update_primitive(this.value)">
-	    <option value="0">POINTS</option>
-	    <option value="1">LINES</option>
-	    <option value="2">LINE_LOOP</option>
-	    <option value="3">LINE_STRIP</option>
-	    <option value="4" selected="selected">TRIANGLES</option>
-	    <option value="5">TRIANGLE_STRIP</option>
-	    <option value="6">TRIANGLE_FAN</option>
-	  </select>
-	</td>
-      </tr>
-      <tr>
 	<td colspan="2">Angle</td>
       </tr>
+      <tr>
 	<td colspan="2">
 	  <input id="angle" type="range" min="0" max="359" step="1" value="0"
 		 onchange="update_angle(this.value)"/>
@@ -62,6 +50,7 @@
       <tr>
 	<td>Subdivisions</td><td>Holes</td>
       </tr>
+      <tr>
 	<td>
 	  <input id="serpinski" type="range" min="0" max="6" step="1" value="0"
 		 onchange="update_serpinski(this.value)"/>
@@ -78,6 +67,19 @@
 	<td colspan="2">
 	  <input id="sides" type="range" min="3" max="21" step="1" value="0"
 		 onchange="update_polygon(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td colspan="2">
+	  <select id="primitive" onchange="update_primitive(this.value)">
+	    <option value="0">POINTS</option>
+	    <option value="1">LINES</option>
+	    <option value="2">LINE_LOOP</option>
+	    <option value="3">LINE_STRIP</option>
+	    <option value="4" selected="selected">TRIANGLES</option>
+	    <option value="5">TRIANGLE_STRIP</option>
+	    <option value="6">TRIANGLE_FAN</option>
+	  </select>
 	</td>
       </tr>
     </table>
