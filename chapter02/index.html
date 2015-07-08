@@ -39,6 +39,19 @@
     </div>
     <table>
       <tr>
+	<td colspan="2">
+	  <select id="primitive" onchange="update_primitive(this.value)">
+	    <option value="0">POINTS</option>
+	    <option value="1">LINES</option>
+	    <option value="2">LINE_LOOP</option>
+	    <option value="3">LINE_STRIP</option>
+	    <option value="4" selected="selected">TRIANGLES</option>
+	    <option value="5">TRIANGLE_STRIP</option>
+	    <option value="6">TRIANGLE_FAN</option>
+	  </select>
+	</td>
+      </tr>
+      <tr>
 	<td colspan="2">Angle</td>
       </tr>
 	<td colspan="2">

@@ -13,6 +13,8 @@ var theta = 0.0;
 
 var to_radians = Math.PI / 180.0;
 
+var primitive = 4;
+
 window.onload = function init()
 {
     var canvas = document.getElementById("webgl-canvas");
@@ -49,7 +51,7 @@ function render(vertices)
     bind_attribute(gl , program , "v_color" , 3);
 
     gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.drawArrays(gl.TRIANGLES , 0 , polygon.length / 2);
+    gl.drawArrays(primitive , 0 , polygon.length / 2);
 }
 
 function update_angle(angle)
@@ -93,4 +95,13 @@ function update_holes(aperture)
 {
     holes = aperture;
     update_polygon(sides , true);
+}
+
+function update_primitive(type)
+{
+    if(0 <= type && type <= 6)
+    {
+	primitive = type;
+	render();
+    }
 }
