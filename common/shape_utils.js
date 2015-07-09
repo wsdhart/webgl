@@ -25,7 +25,7 @@ function create_simple_polygon(faces)
     var nodes = [];
     var pos = Math.PI / 2;
     var angle = (2 * Math.PI) / faces;
-    for(var i = 0 ; i < 6 ; i+=2)
+    for(var i = 0 ; i < faces * 2 ; i+=2)
     {
 	nodes[i] = Math.cos(pos);
 	nodes[i + 1] = Math.sin(pos);
