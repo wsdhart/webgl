@@ -2,11 +2,45 @@
 
 /**
  * Create and return the vertices of an n-sided polygon as a JavaScript array.
- * The returned polygon is made up of triangles.
+ * See create_simple_polygon(faces) and create_triangle_polygon(faces)
  * @param {faces} number of sides to create.
  * @return {nodes} the vertices of the polygon as a JavaScript array.
  */
 function create_polygon(faces)
+{
+    if(faces == 3)
+	return create_simple_polygon(faces);
+    else
+	return create_triangle_polygon(faces);
+}
+
+/**
+ * Create and return the vertices of an n-sided polygon as a JavaScript array.
+ * The returned polygon is ideal for use with LINE_LOOP and TRIANGLE_FAN.
+ * @param {faces} number of sides to create.
+ * @return {nodes} the vertices of the polygon as a JavaScript array.
+ */
+function create_simple_polygon(faces)
+{
+    var nodes = [];
+    var pos = Math.PI / 2;
+    var angle = (2 * Math.PI) / faces;
+    for(var i = 0 ; i < 6 ; i+=2)
+    {
+	nodes[i] = Math.cos(pos);
+	nodes[i + 1] = Math.sin(pos);
+	pos -= angle;
+    }
+    return nodes;
+}
+
+/**
+ * Create and return the vertices of an n-sided polygon as a JavaScript array.
+ * The returned polygon is made up of triangles.
+ * @param {faces} number of sides to create.
+ * @return {nodes} the vertices of the polygon as a JavaScript array.
+ */
+function create_triangle_polygon(faces)
 {
     var nodes = [];
     var pos = Math.PI / 2;
