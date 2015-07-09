@@ -4,7 +4,6 @@
     <script type="text/javascript" src="../common/webgl-utils.js"></script>
     <script type="text/javascript" src="../common/shader_utils.js"></script>
     <script type="text/javascript" src="../common/shape_utils.js"></script>
-    <script type="text/javascript" src="../common/color_utils.js"></script>
     <script type="text/javascript" src="../common/vertex_utils.js"></script>
     <script type="text/javascript" src="triangle.js"></script>
 
@@ -14,8 +13,8 @@
       varying vec4 f_color;
       void main()
       {
-      gl_Position = v_position;
-      f_color = v_color;
+	gl_Position = v_position;
+	f_color = gl_Position * 0.5 + 0.5;
       }
     </script>
     <script id="fragment-shader" type="x-shader/x-fragment">
