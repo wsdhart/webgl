@@ -46,7 +46,7 @@ function render(vertices)
     vertex_buffer = bind_buffer(gl , vertices);
     bind_attribute(gl, program , "v_position" , 2);
 
-    var colors = create_colors(polygon.length / 6);
+    var colors = create_rgb(polygon.length / 6);
     color_buffer = bind_buffer(gl , colors , color_buffer);
     bind_attribute(gl , program , "v_color" , 3);
 
