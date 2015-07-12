@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * Create and return a compiled shader program from the shader id's provided.
+ * Convenience function returns a shader program from the shader ids provided.
  * @param {gl} the WebGLRenderingContext.
  * @param {vert_shader_id} document id of the vertex shader.
  * @param {frag_shader_id} document id of the fragment shader.
@@ -12,7 +12,19 @@ function init_program(gl , vert_shader_id , frag_shader_id)
     var program;
     var vert_shader = fetch_shader(gl , vert_shader_id , gl.VERTEX_SHADER);
     var frag_shader = fetch_shader(gl , frag_shader_id , gl.FRAGMENT_SHADER);
+    return create_program(gl , vert_shader , frag_shader);
+}
 
+/**
+ * Create and return a linked shader program from the shaders provided.
+ * @param {gl} the WebGLRenderingContext.
+ * @param {vert_shader} compiled vertex shader.
+ * @param {frag_shader} compiled fragment shader.
+ * @return {program} Linked WebGLProgram with compiled WebGLShaders attached.
+ */
+function create_program(gl , vert_shader , frag_shader)
+{
+    var program;
     if(vert_shader && frag_shader)
     {
 	program = gl.createProgram();
@@ -31,7 +43,7 @@ function init_program(gl , vert_shader_id , frag_shader_id)
 }
 
 /**
- * Fetch the shader in the given context with the id as type.
+ * Fetch the shader of given type in the given context with the given id.
  * @param {gl} WebGLRenderingContext.
  * @param {id} document id.
  * @param {type} type of WebGLShader to load as.
@@ -42,9 +54,24 @@ function fetch_shader(gl , id , type)
     var shader;
     var shader_txt = document.getElementById(id);
     if(shader_txt)
+	shader = shader_from_txt(gl , shader_txt.text , type);
+    return shader;
+}
+
+/**
+ * Creates WebGLShader of given type from text.
+ * @param {gl} WebGLRenderingContext
+ * @param {shader_txt} text for WebGLShader.
+ * @param {type} type of WebGLShader to load as.
+ * @return {shader} compiled WebGLShader.
+ */
+function shader_from_txt(gl , shader_txt , type)
+{
+    var shader;
+    if(shader_txt)
     {
 	shader = gl.createShader(type);
-	gl.shaderSource(shader , shader_txt.text);
+	gl.shaderSource(shader , shader_txt);
 	gl.compileShader(shader);
 	if(!gl.getShaderParameter(shader , gl.COMPILE_STATUS))
 	{
@@ -75,14 +102,14 @@ function bind_buffer(gl, nodes , buffer)
 /**
  * Bind shader attribute.
  * @param {gl} WebGLRenderingContext.
- * @param {shader} WebGLShader for attribute.
+ * @param {program} WebGLProgram for attribute.
  * @param {attribute_name} name of attribute in shader to bind.
  * @param {size} number of points per vertex [2|3|4]
  * @return {attribute} bound attribute.
  */
-function bind_attribute(gl, shader , attribute_name , size)
+function bind_attribute(gl, program , attribute_name , size)
 {
-    var attribute = gl.getAttribLocation(shader , attribute_name);
+    var attribute = gl.getAttribLocation(program , attribute_name);
     gl.vertexAttribPointer(attribute , size , gl.FLOAT , false , 0 , 0);
     gl.enableVertexAttribArray(attribute);
     return attribute;
