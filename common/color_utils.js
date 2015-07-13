@@ -1,16 +1,18 @@
 "use strict";
 
 /**
- * Creates and returns a JavaScript array containing WebGL compatible colors
+ * Returns a JavaScript array containing WebGL compatible colors
  * from a grayscale palette, enough to cover every 3 vertices.
  * @param {faces} total number of vertices divided by 6.
+ * @param {colors} optional predefined JavaScript array to extend.
  * @return {colors} colors to bind to vertices.
  */
-function create_grayscale(faces)
+function create_grayscale(faces , colors)
 {
-    var colors = [];
+    if(!colors)
+	colors = [];
     var step = 1.0 / faces;
-    for(var i = 0 ; i < faces ; i++)
+    for(var i = colors.length / 9 ; i < faces ; i++)
     {
 	var i_step = i * step;
 	for(var j = 0 ; j < 9 ; j++)
@@ -20,16 +22,18 @@ function create_grayscale(faces)
 }
 
 /**
- * Creates and returns a JavaScript array containing WebGL compatible colors
+ * Returns a JavaScript array containing WebGL compatible colors
  * from an rgb palette, enough to cover every 3 vertices.
  * @param {faces} total number of vertices divided by 6.
+ * @param {colors} optional predefined JavaScript array to extend.
  * @return {colors} colors to bind to vertices.
  */
-function create_rgb(faces)
+function create_rgb(faces , colors)
 {
-    var colors = [];
+    if(!colors)
+	colors = [];
     var step = 1.0 / faces;
-    for(var i = 0 ; i < faces ; i++)
+    for(var i = colors.length / 9 ; i < faces ; i++)
     {
 	colors.push(0.0);
 	colors.push(0.0);
