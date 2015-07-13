@@ -1,0 +1,86 @@
+<html>
+  <head>
+    <title>Week 3</title>
+    <script type="text/javascript" src="../common/webgl-utils.js"></script>
+    <script type="text/javascript" src="../common/shader_utils.js"></script>
+    <script type="text/javascript" src="../common/shape_utils.js"></script>
+    <script type="text/javascript" src="../common/vertex_utils.js"></script>
+    <script type="text/javascript" src="triangle.js"></script>
+
+    <script id="vertex-shader" type="x-shader/x-vertex">
+      attribute vec4 v_position;
+      attribute vec4 v_color;
+      varying vec4 f_color;
+      void main()
+      {
+	gl_Position = v_position;
+	f_color = gl_Position * 0.5 + 0.5;
+      }
+    </script>
+    <script id="fragment-shader" type="x-shader/x-fragment">
+      precision mediump float;
+      varying vec4 f_color;
+      void main()
+      {
+	gl_FragColor = f_color;
+      }
+    </script>
+
+    <noscript>JavaScript is required to view this page's content.</noscript>
+  </head>
+  <body>
+    <h1>The Caucus Race and a Long Tale.</h1>
+    <div align="center">
+      <canvas id="webgl-canvas" width="384" height="384">
+	<img src="../images/caucus.png"/>
+	HTML5 is required to view this page's content.
+      </canvas>
+    </div>
+    <table>
+      <tr>
+	<td colspan="2">Angle</td>
+      </tr>
+      <tr>
+	<td colspan="2">
+	  <input id="angle" type="range" min="0" max="359" step="1" value="0"
+		 onchange="update_angle(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td>Subdivisions</td><td>Gasket</td>
+      </tr>
+      <tr>
+	<td>
+	  <input id="serpinski" type="range" min="0" max="6" step="1" value="0"
+		 onchange="update_serpinski(this.value)"/>
+	</td>
+	<td>
+	  <input id="holes" type="checkbox" value="false"
+		 onchange="update_holes(this.checked)"/>
+	</td>
+      </tr>
+      <tr>
+	<td colspan="2">Polygon faces</td>
+      </tr>
+      <tr>
+	<td colspan="2">
+	  <input id="sides" type="range" min="3" max="21" step="1" value="0"
+		 onchange="update_polygon(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td colspan="2">
+	  <select id="primitive" onchange="update_primitive(this.value)">
+	    <option value="0">POINTS</option>
+	    <option value="1">LINES</option>
+	    <option value="2">LINE_LOOP</option>
+	    <option value="3">LINE_STRIP</option>
+	    <option value="4" selected="selected">TRIANGLES</option>
+	    <option value="5">TRIANGLE_STRIP</option>
+	    <option value="6">TRIANGLE_FAN</option>
+	  </select>
+	</td>
+      </tr>
+    </table>
+  </body>
+</html>
