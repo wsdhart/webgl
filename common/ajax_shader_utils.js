@@ -1,7 +1,7 @@
 "use strict";
 
 var callback;
-var loading = [];
+var loading = 0;
 var shaders = {};
 
 /**
@@ -34,7 +34,7 @@ function ajax_load(url)
 		alert("Failed to load " + url);
 	}
     };
-    loading.push(url);
+    loading++;
     ajax.open('GET' , url , true);
     ajax.send();
 }
@@ -42,7 +42,7 @@ function ajax_load(url)
 /**
  * Barrier function for use with ajax_load(url)
  * Adds shaders to the shaders hash by their URL.
- * If loading array is empty, calls callback function (possible race condition)
+ * If loading semaphore == 0, calls callback function (race condition?)
  * @param {url} URL of returned data.
  * @param {txt} text returned from URL.
  */
@@ -50,8 +50,7 @@ function ajax_barrier(url , txt)
 {
     shaders[url] = txt;
 
-    var index = loading.indexOf(url);
-    loading = loading.slice(index , index + 1);
-    if(loading.length == 0)
+    loading--;
+    if(loading <= 0)
 	callback();
 }
