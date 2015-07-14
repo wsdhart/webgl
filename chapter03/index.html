@@ -5,21 +5,40 @@
     <script type="text/javascript" src="../common/shader_utils.js"></script>
     <script type="text/javascript" src="../common/shape_utils.js"></script>
     <script type="text/javascript" src="../common/vertex_utils.js"></script>
+    <script type="text/javascript" src="../common/color_utils.js"></script>
     <script type="text/javascript" src="triangle.js"></script>
 
     <script id="vertex-shader" type="x-shader/x-vertex">
       attribute vec4 v_position;
+      attribute vec4 v_color;
+      uniform int u_option;
       varying vec4 f_color;
       void main()
       {
 	gl_Position = v_position;
-	float x = cos(v_position.x + 0.5);
-	float y = sin(v_position.y + 0.5);
-	f_color = vec4(x , y , 0.5 , 1.0);
+	if(u_option == 0)
+	{
+		float x = cos(v_position.x + 0.5);
+		float y = sin(v_position.y + 0.5);
+		f_color = vec4(x , y , 0.5 , 1.0);
+	}
+	else if(u_option == 1)
+	{
+		f_color = v_position * 0.5 + 0.5;
+	}
+	else
+	{
+		f_color = v_color;
+	}
       }
     </script>
     <script id="fragment-shader" type="x-shader/x-fragment">
-      precision mediump float;
+      #ifdef GL_FRAGMENT_SHADER_PRECISION_HIGH
+	precision highp float;
+      #else
+	precision mediump float;
+      #endif
+
       varying vec4 f_color;
       void main()
       {
@@ -34,7 +53,10 @@
     <div align="center">
       <canvas id="webgl-canvas" width="384" height="384">
 	<img src="../images/caucus.png"/>
-	HTML5 is required to view this page's content.
+	<b>HTML5 is required to view this page's content.</b>
+	<p>
+	  'Why,' said the Dodo, 'the best way to explain it is to do it.'
+	</p>
       </canvas>
     </div>
     <table>
@@ -70,7 +92,7 @@
 	</td>
       </tr>
       <tr>
-	<td colspan="2">
+	<td>
 	  <select id="primitive" onchange="update_primitive(this.value)">
 	    <option value="0">POINTS</option>
 	    <option value="1">LINES</option>
@@ -79,6 +101,13 @@
 	    <option value="4" selected="selected">TRIANGLES</option>
 	    <option value="5">TRIANGLE_STRIP</option>
 	    <option value="6">TRIANGLE_FAN</option>
+	  </select>
+	</td>
+	<td>
+	  <select id="option" onchange="update_option(this.value)">
+	    <option value="0">Shader colors new</option>
+	    <option value="1">Shader colors old</option>
+	    <option value="2">Vector colors</option>
 	  </select>
 	</td>
       </tr>

@@ -4,6 +4,8 @@ var gl;
 var polygon;
 var program;
 var vertex_buffer;
+var color_buffer;
+var colors;
 
 var sides = 3;
 var subdivisions = 0;
@@ -13,6 +15,9 @@ var theta = 0.0;
 var to_radians = Math.PI / 180.0;
 
 var primitive = 4;
+
+var u_option;
+var option = 0;
 
 window.onload = function init()
 {
@@ -36,6 +41,10 @@ function setup()
     gl.useProgram(program);
 
     polygon = create_polygon(sides);
+
+    colors = create_rgb(polygon.length / 6);
+
+    u_option = gl.getUniformLocation(program , "u_option");
 }
 
 function render(vertices)
@@ -44,6 +53,11 @@ function render(vertices)
 	vertices = polygon;
     vertex_buffer = bind_buffer(gl , vertices);
     bind_attribute(gl, program , "v_position" , 2);
+
+    color_buffer = bind_buffer(gl , colors , color_buffer);
+    bind_attribute(gl , program , "v_color" , 3);
+
+    gl.uniform1i(u_option , option);
 
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.drawArrays(primitive , 0 , polygon.length / 2);
@@ -65,6 +79,7 @@ function update_serpinski(steps)
 	for(var i = 0 ; i < diff ; i++)
 	    polygon = split_vertices(polygon , holes);
 	subdivisions = steps;
+	colors = create_rgb(polygon.length / 6 , colors);
 	update_angle();
     }
     else if(steps < subdivisions)
@@ -82,6 +97,7 @@ function update_polygon(faces , force)
 	sides = faces;
 	for(var i = 0 ; i < subdivisions ; i++)
 	    polygon = split_vertices(polygon , holes);
+	colors = create_rgb(polygon.length / 6 , colors);
 	update_angle();
     }
 }
@@ -97,6 +113,15 @@ function update_primitive(type)
     if(0 <= type && type <= 6)
     {
 	primitive = type;
+	update_angle();
+    }
+}
+
+function update_option(choice)
+{
+    if(0 <= choice && choice <= 2)
+    {
+	option = choice;
 	update_angle();
     }
 }
