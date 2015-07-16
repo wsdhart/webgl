@@ -42,7 +42,7 @@ function ajax_load(url)
 /**
  * Barrier function for use with ajax_load(url)
  * Adds shaders to the shaders hash by their URL.
- * If loading semaphore == 0, calls callback function (race condition?)
+ * If loading semaphore == 0, calls callback function.
  * @param {url} URL of returned data.
  * @param {txt} text returned from URL.
  */
@@ -51,6 +51,6 @@ function ajax_barrier(url , txt)
     shaders[url] = txt;
 
     loading--;
-    if(loading <= 0)
+    if(loading == 0)
 	callback();
 }
