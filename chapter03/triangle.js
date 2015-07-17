@@ -77,7 +77,6 @@ function update_angle(angle)
 {
     if(angle)
 	theta = angle * to_radians;
-    bind_vertices();
     gl.uniform1f(u_theta , theta);
     render();
 }
@@ -91,6 +90,7 @@ function update_subdivide(steps)
 	    polygon = split_vertices(polygon , holes);
 	subdivisions = steps;
 	bind_colors();
+	bind_vertices();
 	update_angle();
     }
     else if(steps < subdivisions)
@@ -109,6 +109,7 @@ function update_polygon(faces , force)
 	for(var i = 0 ; i < subdivisions ; i++)
 	    polygon = split_vertices(polygon , holes);
 	bind_colors();
+	bind_vertices();
 	update_angle();
     }
 }
