@@ -107,9 +107,10 @@ function bind_buffer(gl, nodes , buffer)
  * @param {size} number of points per vertex [2|3|4]
  * @return {attribute} bound attribute.
  */
-function bind_attribute(gl, program , attribute_name , size)
+function bind_attribute(gl, program , attribute_name , size , attribute)
 {
-    var attribute = gl.getAttribLocation(program , attribute_name);
+    if(!attribute)
+	attribute = gl.getAttribLocation(program , attribute_name);
     gl.vertexAttribPointer(attribute , size , gl.FLOAT , false , 0 , 0);
     gl.enableVertexAttribArray(attribute);
     return attribute;
