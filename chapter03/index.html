@@ -4,7 +4,6 @@
     <script type="text/javascript" src="../common/webgl-utils.js"></script>
     <script type="text/javascript" src="../common/shader_utils.js"></script>
     <script type="text/javascript" src="../common/shape_utils.js"></script>
-    <script type="text/javascript" src="../common/vertex_utils.js"></script>
     <script type="text/javascript" src="../common/color_utils.js"></script>
     <script type="text/javascript" src="triangle.js"></script>
 
@@ -12,19 +11,27 @@
       attribute vec4 v_position;
       attribute vec4 v_color;
       uniform int u_option;
+      uniform float u_theta;
       varying vec4 f_color;
       void main()
       {
-	gl_Position = v_position;
+	float length = sqrt(pow(v_position.x , 2.0) + pow(v_position.y , 2.0));
+	float x_theta = u_theta * length;
+	float cxt = cos(x_theta);
+	float sxt = sin(x_theta);
+	gl_Position.x = (cxt * v_position.y) - (sxt * v_position.x);
+	gl_Position.y = (sxt * v_position.y) + (cxt * v_position.x);
+	gl_Position.z = 0.0;
+	gl_Position.w = 1.0;
 	if(u_option == 0)
 	{
-		float x = cos(v_position.x + 0.5);
-		float y = sin(v_position.y + 0.5);
+		float x = cos(gl_Position.x + 0.5);
+		float y = sin(gl_Position.y + 0.5);
 		f_color = vec4(x , y , 0.5 , 1.0);
 	}
 	else if(u_option == 1)
 	{
-		f_color = v_position * 0.5 + 0.5;
+		f_color = gl_Position * 0.5 + 0.5;
 	}
 	else
 	{

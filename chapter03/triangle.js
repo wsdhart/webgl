@@ -13,6 +13,7 @@ var sides = 3;
 var subdivisions = 0;
 var holes = false;
 var theta = 0.0;
+var u_theta;
 
 var to_radians = Math.PI / 180.0;
 
@@ -48,6 +49,7 @@ function setup()
     bind_colors();
 
     u_option = gl.getUniformLocation(program , "u_option");
+    u_theta = gl.getUniformLocation(program , "u_theta");
 }
 
 function bind_colors()
@@ -75,8 +77,8 @@ function update_angle(angle)
 {
     if(angle)
 	theta = angle * to_radians;
-    var twisted = twist_points(polygon , theta);
-    bind_vertices(twisted);
+    bind_vertices();
+    gl.uniform1f(u_theta , theta);
     render();
 }
 
