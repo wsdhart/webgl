@@ -6,6 +6,8 @@ var program;
 var vertex_buffer;
 var color_buffer;
 var colors;
+var v_color;
+var v_position;
 
 var sides = 3;
 var subdivisions = 0;
@@ -52,9 +54,9 @@ function render(vertices)
     if(!vertices)
 	vertices = polygon;
     vertex_buffer = bind_buffer(gl , vertices);
-    bind_attribute(gl, program , "v_position" , 2);
+    v_position = bind_attribute(gl, program , "v_position" , 2 , v_position);
 
-    color_buffer = bind_buffer(gl , colors , color_buffer);
+    v_color = color_buffer = bind_buffer(gl , colors , color_buffer , v_color);
     bind_attribute(gl , program , "v_color" , 3);
 
     gl.uniform1i(u_option , option);
