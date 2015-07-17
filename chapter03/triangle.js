@@ -55,15 +55,15 @@ function setup()
 function bind_colors()
 {
     colors = create_rgb(polygon.length / 6);
-    v_color = color_buffer = bind_buffer(gl , colors , color_buffer , v_color);
-    bind_attribute(gl , program , "v_color" , 3);
+    color_buffer = bind_buffer(gl , colors , color_buffer);
+    v_color = bind_attribute(gl , program , "v_color" , 3 , v_color);
 }
 
 function bind_vertices(vertices)
 {
     if(!vertices)
 	vertices = polygon;
-    vertex_buffer = bind_buffer(gl , vertices);
+    vertex_buffer = bind_buffer(gl , vertices , vertex_buffer);
     v_position = bind_attribute(gl, program , "v_position" , 2 , v_position);
 }
 
