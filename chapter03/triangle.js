@@ -82,7 +82,7 @@ function update_angle(angle)
     render();
 }
 
-function update_serpinski(steps)
+function update_subdivide(steps)
 {
     if(steps > subdivisions)
     {
@@ -113,9 +113,9 @@ function update_polygon(faces , force)
     }
 }
 
-function update_holes(aperture)
+function update_gasket(gasket)
 {
-    holes = aperture;
+    holes = gasket;
     update_polygon(sides , true);
 }
 
