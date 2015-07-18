@@ -59,7 +59,7 @@ function bindings()
 
 function bind_colors()
 {
-    colors = create_rgb(polygon.length / 6);
+    colors = create_rgb(polygon.length / 6 , colors);
     color_buffer = bind_buffer(gl , colors , color_buffer);
     v_color = bind_attribute(gl , program , "v_color" , 3 , v_color);
 }
