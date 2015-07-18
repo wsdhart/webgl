@@ -44,12 +44,17 @@ function setup()
     gl.useProgram(program);
 
     polygon = create_polygon(sides);
-    bind_vertices();
 
-    bind_colors();
+    bindings();
 
     u_option = gl.getUniformLocation(program , "u_option");
     u_theta = gl.getUniformLocation(program , "u_theta");
+}
+
+function bindings()
+{
+    bind_colors();
+    bind_vertices();
 }
 
 function bind_colors()
@@ -59,11 +64,9 @@ function bind_colors()
     v_color = bind_attribute(gl , program , "v_color" , 3 , v_color);
 }
 
-function bind_vertices(vertices)
+function bind_vertices()
 {
-    if(!vertices)
-	vertices = polygon;
-    vertex_buffer = bind_buffer(gl , vertices , vertex_buffer);
+    vertex_buffer = bind_buffer(gl , polygon , vertex_buffer);
     v_position = bind_attribute(gl, program , "v_position" , 2 , v_position);
 }
 
@@ -89,8 +92,7 @@ function update_subdivide(steps)
 	for(var i = 0 ; i < diff ; i++)
 	    polygon = split_vertices(polygon , holes);
 	subdivisions = steps;
-	bind_colors();
-	bind_vertices();
+	bindings();
 	update_angle();
     }
     else if(steps < subdivisions)
@@ -108,8 +110,7 @@ function update_polygon(faces , force)
 	sides = faces;
 	for(var i = 0 ; i < subdivisions ; i++)
 	    polygon = split_vertices(polygon , holes);
-	bind_colors();
-	bind_vertices();
+	bindings();
 	update_angle();
     }
 }
