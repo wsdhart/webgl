@@ -1,0 +1,121 @@
+<html>
+  <head>
+    <title>Appendix I</title>
+    <script type="text/javascript" src="../common/webgl-utils.js"></script>
+    <script type="text/javascript" src="../common/shader_utils.js"></script>
+    <script type="text/javascript" src="../common/shape_utils.js"></script>
+    <script type="text/javascript" src="../common/color_utils.js"></script>
+    <script type="text/javascript" src="triangle.js"></script>
+
+    <script id="vertex-shader" type="x-shader/x-vertex">
+      attribute vec4 v_position;
+      attribute vec4 v_color;
+      uniform int u_option;
+      uniform float u_theta;
+      varying vec4 f_color;
+      void main()
+      {
+	float length = sqrt(pow(v_position.x , 2.0) + pow(v_position.y , 2.0));
+	float x_theta = u_theta * length;
+	float cxt = cos(x_theta);
+	float sxt = sin(x_theta);
+	gl_Position.x = (cxt * v_position.y) - (sxt * v_position.x);
+	gl_Position.y = (sxt * v_position.y) + (cxt * v_position.x);
+	gl_Position.z = 0.0;
+	gl_Position.w = 1.0;
+	if(u_option == 0)
+	{
+		float x = cos(gl_Position.x + 0.5);
+		float y = sin(gl_Position.y + 0.5);
+		f_color = vec4(x , y , 0.5 , 1.0);
+	}
+	else if(u_option == 1)
+	{
+		f_color = gl_Position * 0.5 + 0.5;
+	}
+	else
+	{
+		f_color = v_color;
+	}
+      }
+    </script>
+    <script id="fragment-shader" type="x-shader/x-fragment">
+      #ifdef GL_FRAGMENT_SHADER_PRECISION_HIGH
+	precision highp float;
+      #else
+	precision mediump float;
+      #endif
+
+      varying vec4 f_color;
+      void main()
+      {
+	gl_FragColor = f_color;
+      }
+    </script>
+
+    <noscript>JavaScript is required to view this page's content.</noscript>
+  </head>
+  <body>
+    <h1>Interactive Computer Graphics with WebGL</h1>
+    <h2>Assignment 1 : Tessellation and Twist.</h2>
+    <div align="center">
+      <canvas id="webgl-canvas" width="384" height="384">
+	<img src="appendix_i.png"/>
+	<b>HTML5 is required to view this page's content.</b>
+      </canvas>
+    </div>
+    <table>
+      <tr>
+	<td colspan="2">Angle</td>
+      </tr>
+      <tr>
+	<td colspan="2">
+	  <input id="angle" type="range" min="0" max="359" step="1" value="0"
+		 onchange="update_angle(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td>Subdivisions</td><td>Gasket</td>
+      </tr>
+      <tr>
+	<td>
+	  <input id="subdivide" type="range" min="0" max="6" step="1" value="0"
+		 onchange="update_subdivide(this.value)"/>
+	</td>
+	<td>
+	  <input id="gasket" type="checkbox" value="false"
+		 onchange="update_gasket(this.checked)"/>
+	</td>
+      </tr>
+      <tr>
+	<td colspan="2">Polygon faces</td>
+      </tr>
+      <tr>
+	<td colspan="2">
+	  <input id="sides" type="range" min="3" max="21" step="1" value="0"
+		 onchange="update_polygon(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td>
+	  <select id="primitive" onchange="update_primitive(this.value)">
+	    <option value="0">POINTS</option>
+	    <option value="1">LINES</option>
+	    <option value="2">LINE_LOOP</option>
+	    <option value="3">LINE_STRIP</option>
+	    <option value="4" selected="selected">TRIANGLES</option>
+	    <option value="5">TRIANGLE_STRIP</option>
+	    <option value="6">TRIANGLE_FAN</option>
+	  </select>
+	</td>
+	<td>
+	  <select id="option" onchange="update_option(this.value)">
+	    <option value="0">Shader colors new</option>
+	    <option value="1">Shader colors old</option>
+	    <option value="2">Vector colors</option>
+	  </select>
+	</td>
+      </tr>
+    </table>
+  </body>
+</html>
