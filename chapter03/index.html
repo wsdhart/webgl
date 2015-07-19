@@ -16,11 +16,11 @@
       void main()
       {
 	float length = sqrt(pow(v_position.x , 2.0) + pow(v_position.y , 2.0));
-	float x_theta = u_theta * length;
-	float cxt = cos(x_theta);
-	float sxt = sin(x_theta);
-	gl_Position.x = (cxt * v_position.y) - (sxt * v_position.x);
-	gl_Position.y = (sxt * v_position.y) + (cxt * v_position.x);
+	float d_theta = u_theta * length;
+	float cdt = cos(d_theta);
+	float sdt = sin(d_theta);
+	gl_Position.x = (cdt * v_position.x) - (sdt * v_position.y);
+	gl_Position.y = (sdt * v_position.x) + (cdt * v_position.y);
 	gl_Position.z = 0.0;
 	gl_Position.w = 1.0;
 	if(u_option == 0)
