@@ -42,9 +42,21 @@
 	<b>HTML5 is required to view this page's content.</b>
       </canvas>
     </div>
-    <input type="color" id="color_picker"
-	   onchange="set_color(this.value)" value="#000000"/><br/>
-    <input type="range" id="thickness" min="1" max="8" step="1" value="1"
-	   onchange="set_thickness(this.value)"/>
+    <table>
+      <tr>
+	<td>Color : </td>
+	<td>
+	  <input type="color" id="color_picker"
+		 onchange="set_color(this.value)" value="#000000"/>
+	</td>
+      </tr>
+      <tr>
+	<td>Thickness : </td>
+	<td>
+	  <input type="range" id="thickness" min="1" max="8" step="1"
+		 value="1" onchange="set_thickness(this.value)"/>
+	</td>
+      </tr>
+      </table>
   </body>
 </html>
