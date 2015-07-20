@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <title>Week 4</title>
+    <script type="text/javascript" src="../common/webgl-utils.js"></script>
+    <script type="text/javascript" src="../common/shader_utils.js"></script>
+    <script type="text/javascript" src="../common/shape_utils.js"></script>
+    <script type="text/javascript" src="../common/color_utils.js"></script>
+    <script type="text/javascript" src="triangle.js"></script>
+
+    <script id="vertex-shader" type="x-shader/x-vertex">
+      attribute vec4 v_position;
+      attribute vec4 v_color;
+      varying vec4 f_color;
+      void main()
+      {
+      gl_Position = v_position;
+      f_color = v_color;
+      }
+    </script>
+    <script id="fragment-shader" type="x-shader/x-fragment">
+      #ifdef GL_FRAGMENT_SHADER_PRECISION_HIGH
+	precision highp float;
+      #else
+	precision mediump float;
+      #endif
+
+      varying vec4 f_color;
+      void main()
+      {
+	gl_FragColor = f_color;
+      }
+    </script>
+
+    <noscript>JavaScript is required to view this page's content.</noscript>
+  </head>
+  <body>
+    <h1>The Rabbit Sends in a Little Bill.</h1>
+    <div align="center">
+      <canvas id="webgl-canvas" width="384" height="384"
+	      style="border:1px solid #000000;">
+	<img src="../images/cucumberframe.png"/>
+	<b>HTML5 is required to view this page's content.</b>
+      </canvas>
+    </div>
+    <input type="color" id="color_picker"
+	   onchange="set_color(this.value)" value="#000000"/><br/>
+    <input type="range" id="thickness" min="1" max="8" step="1" value="1"
+	   onchange="set_thickness(this.value)"/>
+  </body>
+</html>
