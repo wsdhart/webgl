@@ -10,7 +10,7 @@ var vertices = [];
 
 var color_buffer;
 var v_color;
-var current_color = [0.0 , 0.0 , 0.0];
+var current_color = [1.0 , 1.0 , 1.0];
 var colors = [];
 
 var div = 1.0 / 255;
@@ -33,7 +33,7 @@ window.onload = function init()
 function setup()
 {
     gl.viewport(0 , 0 , gl.drawingBufferWidth , gl.drawingBufferHeight);
-    gl.clearColor(1.0 , 1.0 , 1.0 , 1.0);
+    gl.clearColor(0.0 , 0.0 , 0.0 , 1.0);
 
     program = init_program(gl , "vertex-shader" , "fragment-shader");
     gl.useProgram(program);
@@ -65,7 +65,8 @@ function mouse_up(event)
 
 function mouse_move(event)
 {
-    mouse_log(event.clientX , event.clientY);
+    if(mouse_depressed)
+	mouse_log(event.clientX , event.clientY);
 }
 
 function mouse_out(event)
@@ -88,26 +89,11 @@ function mouse_log(x , y)
 
 function mouse_draw(dx , dy)
 {
-    if(mouse_depressed)
-    {
-	for(var j = 0 ; j < 2 ; j++)
-	{
-	    vertices.push(dx);
-	    vertices.push(dy);
+    vertices.push(dx);
+    vertices.push(dy);
 
-	    for(var i = 0 ; i < current_color.length ; i++)
-		colors.push(current_color[i]);
-	}
-    }
-    else
-    {
-	vertices[vertices.length - 2] = dx;
-	vertices[vertices.length - 1] = dy;
-
-	colors[colors.length - 3] = current_color[0];
-	colors[colors.length - 2] = current_color[1];
-	colors[colors.length - 1] = current_color[2];
-    }
+    for(var i = 0 ; i < current_color.length ; i++)
+	colors.push(current_color[i]);
 
     vertex_buffer = bind_buffer(gl , vertices , vertex_buffer);
     v_position = bind_attribute(gl , program , "v_position" , 2 , v_position);
