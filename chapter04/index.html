@@ -50,8 +50,14 @@
       <tr>
 	<td>Thickness : </td>
 	<td>
-	  <input type="range" id="thickness" min="1" max="8" step="1"
-		 value="1" onchange="set_thickness(this.value)"/>
+	  <input type="range" id="thickness" min="0.01" max="0.1" step="0.01"
+		 value="0.01" onchange="set_thickness(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td>Undo : </td>
+	<td>
+	  <input type="button" id="undo" value="undo" onclick="undo()"/>
 	</td>
       </tr>
     </table>

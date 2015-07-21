@@ -7,15 +7,19 @@ var program;
 var vertex_buffer;
 var v_position;
 var vertices = [];
+var lines = [];
 
 var color_buffer;
 var v_color;
 var current_color = [1.0 , 1.0 , 1.0];
 var colors = [];
+var shades = [];
 
 var div = 1.0 / 255;
 
 var mouse_depressed = false;
+
+var span = 0.01;
 
 window.onload = function init()
 {
@@ -43,17 +47,33 @@ function setup()
     canvas.addEventListener("mousemove" , mouse_move);
     canvas.addEventListener("mouseout" , mouse_out);
 
-    gl.lineWidth(1);
 }
 
 function render()
 {
     gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.drawArrays(gl.LINE_STRIP , 0 , vertices.length / 2);
+
+    for(var i = 0 ; i < lines.length ; i++)
+    {
+	var points = lines[i];
+	vertex_buffer = bind_buffer(gl , points , vertex_buffer);
+	v_position = bind_attribute(gl , program ,
+				    "v_position" , 2 , v_position);
+
+	var dyes = shades[i];
+	color_buffer = bind_buffer(gl , dyes , color_buffer);
+	v_color = bind_attribute(gl , program , "v_color" , 3 , v_color);
+
+	gl.drawArrays(gl.TRIANGLE_STRIP , 0 , points.length / 2);
+    }
 }
 
 function mouse_down(event)
 {
+    vertices = [];
+    colors = [];
+    lines.push(vertices);
+    shades.push(colors);
     mouse_depressed = true;
     mouse_log(event.clientX , event.clientY);
 }
@@ -83,23 +103,23 @@ function mouse_log(x , y)
     var height = canvas.height;
     var dx = -1.0 + ((2.0 * x) / width);
     var dy = -1.0 + ((2.0 * (height - y)) / height);
+    var angle = Math.atan2(dy , dx);
 
-    mouse_draw(dx , dy);
+    mouse_draw(dx , dy , angle);
 }
 
-function mouse_draw(dx , dy)
+function mouse_draw(dx , dy , angle)
 {
-    vertices.push(dx);
-    vertices.push(dy);
+    vertices.push(dx + (span * Math.cos(angle)));
+    vertices.push(dy + (span * Math.sin(angle)));
+    vertices.push(dx - (span * Math.cos(angle)));
+    vertices.push(dy - (span * Math.sin(angle)));
 
     for(var i = 0 ; i < current_color.length ; i++)
 	colors.push(current_color[i]);
 
-    vertex_buffer = bind_buffer(gl , vertices , vertex_buffer);
-    v_position = bind_attribute(gl , program , "v_position" , 2 , v_position);
-
-    color_buffer = bind_buffer(gl , colors , color_buffer);
-    v_color = bind_attribute(gl , program , "v_color" , 3 , v_color);
+    for(var i = 0 ; i < current_color.length ; i++)
+	colors.push(current_color[i]);
 
     render();
 }
@@ -115,9 +135,14 @@ function set_color(color)
 
 function set_thickness(thickness)
 {
-    if(1 <= thickness && thickness <= 8)
-    {
-	gl.lineWidth(thickness);
-	render();
-    }
+    thickness = parseFloat(thickness);
+    if(0.01 <= thickness && thickness <= 0.1)
+	span = thickness;
+}
+
+function undo()
+{
+    lines.pop();
+    shades.pop();
+    render();
 }
