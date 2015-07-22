@@ -130,18 +130,18 @@ function mouse_draw(dx , dy , angle)
 
 function set_fgcolor(color)
 {
-    var red = parseFloat(parseInt(color.substring(1 , 3) , 16));
-    var green = parseFloat(parseInt(color.substring(3 , 5) , 16));
-    var blue = parseFloat(parseInt(color.substring(5 , 7) , 16));
+    var red = parseInt(color.substring(1 , 3) , 16);
+    var green = parseInt(color.substring(3 , 5) , 16);
+    var blue = parseInt(color.substring(5 , 7) , 16);
 
     current_color = [red * div , green * div , blue * div];
 }
 
 function set_bgcolor(color)
 {
-    var red = parseFloat(parseInt(color.substring(1 , 3) , 16));
-    var green = parseFloat(parseInt(color.substring(3 , 5) , 16));
-    var blue = parseFloat(parseInt(color.substring(5 , 7) , 16));
+    var red = parseInt(color.substring(1 , 3) , 16);
+    var green = parseInt(color.substring(3 , 5) , 16);
+    var blue = parseInt(color.substring(5 , 7) , 16);
 
     gl.clearColor(red * div , green * div , blue * div , 1.0);
     render();
