@@ -18,6 +18,7 @@ var shades = [];
 var div = 1.0 / 255;
 
 var mouse_depressed = false;
+var ddx , ddy;
 
 var span = 0.01;
 
@@ -103,17 +104,20 @@ function mouse_log(x , y)
     var height = canvas.height;
     var dx = -1.0 + ((2.0 * x) / width);
     var dy = -1.0 + ((2.0 * (height - y)) / height);
-    var angle = Math.atan2(dy , dx);
+    var angle = Math.atan2(y - ddy , x - ddx);
+    ddx = x ; ddy = y;
 
     mouse_draw(dx , dy , angle);
 }
 
 function mouse_draw(dx , dy , angle)
 {
-    vertices.push(dx + (span * Math.cos(angle)));
-    vertices.push(dy + (span * Math.sin(angle)));
-    vertices.push(dx - (span * Math.cos(angle)));
-    vertices.push(dy - (span * Math.sin(angle)));
+    var cosa = span * Math.cos(angle);
+    var sina = span * Math.sin(angle);
+    vertices.push(dx + sina);
+    vertices.push(dy + cosa);
+    vertices.push(dx - sina);
+    vertices.push(dy - cosa);
 
     for(var i = 0 ; i < current_color.length ; i++)
 	colors.push(current_color[i]);
