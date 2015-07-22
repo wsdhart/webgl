@@ -39,25 +39,32 @@
 	<b>HTML5 is required to view this page's content.</b>
       </canvas>
     </div>
-    <table>
+    <table cellpadding="4">
       <tr>
-	<td>Color : </td>
+	<td align="right">Draw color : </td>
 	<td>
-	  <input type="color" id="color_picker"
-		 onchange="set_color(this.value)" value="#ffffff"/>
+	  <input type="color" id="draw_color"
+		 onchange="set_fgcolor(this.value)" value="#ffffff"/>
 	</td>
       </tr>
       <tr>
-	<td>Thickness : </td>
+	<td align="right">Thickness : </td>
 	<td>
 	  <input type="range" id="thickness" min="0.01" max="0.1" step="0.01"
 		 value="0.01" onchange="set_thickness(this.value)"/>
 	</td>
       </tr>
       <tr>
-	<td>Undo : </td>
+	<td align="right">Undo line : </td>
 	<td>
 	  <input type="button" id="undo" value="undo" onclick="undo()"/>
+	</td>
+      </tr>
+      <tr>
+	<td align="right">Clear color : </td>
+	<td>
+	  <input type="color" id="clear_color"
+		 onchange="set_bgcolor(this.value)" value="#000000"/>
 	</td>
       </tr>
     </table>

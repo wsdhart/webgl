@@ -128,13 +128,23 @@ function mouse_draw(dx , dy , angle)
     render();
 }
 
-function set_color(color)
+function set_fgcolor(color)
 {
     var red = parseFloat(parseInt(color.substring(1 , 3) , 16));
     var green = parseFloat(parseInt(color.substring(3 , 5) , 16));
     var blue = parseFloat(parseInt(color.substring(5 , 7) , 16));
 
     current_color = [red * div , green * div , blue * div];
+}
+
+function set_bgcolor(color)
+{
+    var red = parseFloat(parseInt(color.substring(1 , 3) , 16));
+    var green = parseFloat(parseInt(color.substring(3 , 5) , 16));
+    var blue = parseFloat(parseInt(color.substring(5 , 7) , 16));
+
+    gl.clearColor(red * div , green * div , blue * div , 1.0);
+    render();
 }
 
 function set_thickness(thickness)
