@@ -25,7 +25,7 @@ var span = 0.01;
 window.onload = function init()
 {
     canvas = document.getElementById("webgl-canvas");
-    gl = WebGLUtils.setupWebGL(canvas);
+    gl = WebGLUtils.setupWebGL(canvas , {preserveDrawingBuffer: true});
     if(gl)
     {
 	setup();
@@ -47,7 +47,6 @@ function setup()
     canvas.addEventListener("mouseup" , mouse_up);
     canvas.addEventListener("mousemove" , mouse_move);
     canvas.addEventListener("mouseout" , mouse_out);
-
 }
 
 function render()
@@ -159,4 +158,14 @@ function undo()
     lines.pop();
     shades.pop();
     render();
+}
+
+function save()
+{
+    var image = canvas.toDataURL('image/png');
+
+    var a = document.createElement('a');
+    a.href = image;
+    a.download = "webgl-image.png";
+    a.click();
 }
