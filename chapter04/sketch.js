@@ -149,7 +149,7 @@ function set_bgcolor(color)
 function set_thickness(thickness)
 {
     thickness = parseFloat(thickness);
-    if(0.01 <= thickness && thickness <= 0.1)
+    if(0.01 <= thickness)
 	span = thickness;
 }
 
