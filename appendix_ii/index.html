@@ -1,0 +1,80 @@
+<html>
+  <head>
+    <title>Appendix II</title>
+    <script type="text/javascript" src="../common/webgl-utils.js"></script>
+    <script type="text/javascript" src="../common/shader_utils.js"></script>
+    <script type="text/javascript" src="sketch.js"></script>
+
+    <script id="vertex-shader" type="x-shader/x-vertex">
+      attribute vec4 v_position;
+      attribute vec4 v_color;
+      varying vec4 f_color;
+      void main()
+      {
+	gl_Position = v_position;
+	f_color = v_color;
+      }
+    </script>
+    <script id="fragment-shader" type="x-shader/x-fragment">
+      #ifdef GL_FRAGMENT_SHADER_PRECISION_HIGH
+	precision highp float;
+      #else
+	precision mediump float;
+      #endif
+
+      varying vec4 f_color;
+      void main()
+      {
+	gl_FragColor = f_color;
+      }
+    </script>
+
+    <noscript>JavaScript is required to view this page's content.</noscript>
+  </head>
+  <body>
+    <h1>Interactive Computer Graphics with WebGL</h1>
+    <h2>Assignment 2 : Painting with the Mouse.</h2>
+    <div align="center">
+      <canvas id="webgl-canvas" width="512" height="384">
+	<img src="appendix_ii.png"/>
+	<b>HTML5 is required to view this page's content.</b>
+      </canvas>
+    </div>
+    <table cellpadding="4">
+      <tr>
+	<td align="right">Draw color : </td>
+	<td>
+	  <input type="color" id="draw_color"
+		 onchange="set_fgcolor(this.value)" value="#ffffff"/>
+	</td>
+      </tr>
+      <tr>
+	<td align="right">Thickness : </td>
+	<td>
+	  <input type="range" id="thickness" min="0.01" max="0.2" step="0.01"
+		 value="0.01" onchange="set_thickness(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td align="right">Undo line : </td>
+	<td>
+	  <input type="button" id="undo" value="undo" onclick="undo()"/>
+	</td>
+      </tr>
+      <tr>
+	<td align="right">Clear color : </td>
+	<td>
+	  <input type="color" id="clear_color"
+		 onchange="set_bgcolor(this.value)" value="#000000"/>
+	</td>
+      </tr>
+      <tr>
+	<td align="right"><s>Download : </s></td>
+	<td>
+	  <input type="button" id="save" value="save" onclick="save()"
+		 disabled="true"/>
+	</td>
+      </tr>
+    </table>
+  </body>
+</html>
