@@ -23,6 +23,8 @@ var v_color;
 
 var to_radians = Math.PI / 180.0;
 
+var primitive = 2;
+
 window.onload = function init()
 {
     canvas = document.getElementById("webgl-canvas");
@@ -85,9 +87,15 @@ function render()
     gl.uniformMatrix4fv(u_perspective , false , perspective);
 
     gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.drawArrays(gl.LINE_LOOP , 0 , shape.length / 3);
+    gl.drawArrays(primitive , 0 , shape.length / 3);
 
     requestAnimFrame(render);
+}
+
+function update_primitive(type)
+{
+    if(0 <= primitive && primitive <= 6)
+	primitive = type;
 }
 
 function create_cube()

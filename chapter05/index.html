@@ -41,5 +41,16 @@
 	<b>HTML5 is required to view this page's content.</b>
       </canvas>
     </div>
+    <p>
+      <select id="primitive" onchange="update_primitive(this.value)">
+	<option value="0">POINTS</option>
+	<option value="1">LINES</option>
+	<option value="2" selected>LINE_LOOP</option>
+	<option value="3">LINE_STRIP</option>
+	<option value="4">TRIANGLES</option>
+	<option value="5">TRIANGLE_STRIP</option>
+	<option value="6">TRIANGLE_FAN</option>
+      </select>
+    </p>
   </body>
 </html>
