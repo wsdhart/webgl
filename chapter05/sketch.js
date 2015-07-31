@@ -46,7 +46,7 @@ function setup()
     program = init_program(gl , "vertex-shader" , "fragment-shader");
     gl.useProgram(program);
 
-    shape = create_pyramid();
+    shape = create_tetra();
 
     pos_matrix = mat4.create();
     pos_matrix = mat4.identity(pos_matrix);
@@ -77,7 +77,7 @@ function render()
 	rot_matrix ,
 	pos_matrix ,
 	theta++ * to_radians ,
-	[0 , 1 , 0]
+	[0 , 1 , 1]
     );
 
     u_pos_matrix = gl.getUniformLocation(program , "u_pos_matrix");
@@ -98,64 +98,18 @@ function update_primitive(type)
 	primitive = type;
 }
 
-function create_cube()
+function create_tetra()
 {
-    var nodes =
-	[
-	    // north
-	    (-1.0) , (-1.0) , 1.0 ,
-	    1.0 , (-1.0) , 1.0 ,
-	    1.0 , 1.0 , 1.0 ,
-	    (-1.0) , 1.0 , 1.0 ,
-	    // south
-	    (-1.0) , (-1.0) , (-1.0) ,
-	    (-1.0) , 1.0 , (-1.0) ,
-	    1.0 , 1.0 , (-1.0) ,
-	    1.0 , (-1.0) , (-1.0) ,
-	    // up
-	    (-1.0) , 1.0 , (-1.0) ,
-	    (-1.0) , 1.0 , 1.0 ,
-	    1.0 , 1.0 , 1.0 ,
-	    1.0 , 1.0 , (-1.0) ,
-	    // down
-	    (-1.0) , (-1.0) , (-1.0) ,
-	    1.0 , (-1.0) , -1.0 ,
-	    1.0 , (-1.0) , 1.0 ,
-	    (-1.0) , (-1.0) , 1.0 ,
-	    // east
-	    1.0 , (-1.0) , (-1.0) ,
-	    1.0 , 1.0 , (-1.0) ,
-	    1.0 , 1.0 , 1.0 ,
-	    1.0 , (-1.0) , 1.0 ,
-	    // west
-	    (-1.0) , (-1.0) , (-1.0) ,
-	    (-1.0) , (-1.0) , 1.0 ,
-	    (-1.0) , 1.0 , 1.0 ,
-	    (-1.0) , 1.0 , (-1.0) ,
-	];
-    return nodes;
-}
-
-function create_pyramid()
-{
-    var nodes =
-	[
-	    // north
-	    0.0 , 1.0 , 0.0 ,
-	    (-1.0) , (-1.0) , 1.0 ,
-	    1.0 , -1.0 , 1.0 ,
-	    // east
-	    0.0 , 1.0 , 0.0 ,
-	    1.0 , (-1.0) , 1.0 ,
-	    1.0 , (-1.0) , (-1.0) ,
-	    // south
-	    0.0 , 1.0 , 0.0 ,
-	    1.0 , (-1.0) , (-1.0) ,
-	    (-1.0) , (-1.0) , (-1.0) ,
-	    // west
-	    0.0 , 1.0 , 0.0 ,
-	    (-1.0) , (-1.0) , (-1.0) ,
-	    (-1.0) , (-1.0) , 1.0
-	];
+    var nodes = [];
+    var pos = Math.PI / 2;
+    var faces = 3;
+    var angle = (2 * Math.PI) / faces;
+    for(var i = 0; i < faces * 3; i += 3)
+    {
+	nodes[i] = Math.cos(pos);
+	nodes[i + 1] = Math.sin(pos);
+	nodes[i + 2] = 0.0;
+	pos += angle;
+    }
     return nodes;
 }
