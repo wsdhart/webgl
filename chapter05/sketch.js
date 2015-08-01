@@ -41,12 +41,13 @@ window.onload = function init()
 function setup()
 {
     gl.viewport(0 , 0 , gl.drawingBufferWidth , gl.drawingBufferHeight);
-    gl.clearColor(0.0 , 0.0 , 0.0 , 1.0);
+    gl.clearColor(1.0 , 1.0 , 1.0 , 1.0);
+    gl.lineWidth(10.0);
 
     program = init_program(gl , "vertex-shader" , "fragment-shader");
     gl.useProgram(program);
 
-    shape = create_tetra();
+    shape = create_sphere();
 
     pos_matrix = mat4.create();
     pos_matrix = mat4.identity(pos_matrix);
@@ -98,18 +99,33 @@ function update_primitive(type)
 	primitive = type;
 }
 
-function create_tetra()
+// learningwebgl / webkit team method.
+function create_sphere()
 {
     var nodes = [];
-    var pos = Math.PI / 2;
-    var faces = 3;
-    var angle = (2 * Math.PI) / faces;
-    for(var i = 0; i < faces * 3; i += 3)
+    var horizontals = 100;
+    var horizontal_slice = Math.PI / horizontals;
+    var verticals = 10;
+    var vertical_slice = 2 * Math.PI / verticals;
+    for(var lattitude = 0; lattitude < horizontals ; lattitude++)
     {
-	nodes[i] = Math.cos(pos);
-	nodes[i + 1] = Math.sin(pos);
-	nodes[i + 2] = 0.0;
-	pos += angle;
+	var theta = lattitude * horizontal_slice;
+	var sin_theta = Math.sin(theta);
+	var cos_theta = Math.cos(theta);
+
+	for(var longitude = 0; longitude < verticals ; longitude++)
+	{
+	    var phi = longitude * vertical_slice;
+	    var sin_phi = Math.sin(phi);
+	    var cos_phi = Math.cos(phi);
+
+	    var x = cos_phi * sin_theta;
+	    var y = cos_theta;
+	    var z = sin_phi * sin_theta;
+	    nodes.push(x);
+	    nodes.push(y);
+	    nodes.push(z);
+	}
     }
     return nodes;
 }
