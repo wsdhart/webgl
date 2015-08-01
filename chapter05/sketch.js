@@ -51,7 +51,6 @@ function setup()
 
     shape = create_sphere(10);
     shape_indexes = create_indexes(10);
-    index_buffer = gl.createBuffer();
 
     pos_matrix = mat4.create();
     pos_matrix = mat4.identity(pos_matrix);
@@ -77,13 +76,7 @@ function render()
     vertex_buffer = bind_buffer(gl , shape , vertex_buffer);
     v_position = bind_attribute(gl , program , "v_position" , 3 , v_position);
 
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER , index_buffer);
-    gl.bufferData
-    (
-	gl.ELEMENT_ARRAY_BUFFER ,
-	new Uint16Array(shape_indexes) ,
-	gl.STATIC_DRAW
-    );
+    index_buffer = bind_indices(gl , shape_indexes , index_buffer);
 
     rot_matrix = mat4.rotate
     (

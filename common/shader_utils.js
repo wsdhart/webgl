@@ -115,3 +115,23 @@ function bind_attribute(gl, program , attribute_name , size , attribute)
     gl.enableVertexAttribArray(attribute);
     return attribute;
 }
+
+/**
+ * Bind indices to gpu buffer.
+ * @param {gl} WebGLRenderingContext.
+ * @param {indices} JavaScript array to be bound.
+ * @return {buffer} bound buffer.
+ */
+function bind_indices(gl , indices , buffer)
+{
+    if(!buffer)
+	buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER , buffer);
+    gl.bufferData
+    (
+	gl.ELEMENT_ARRAY_BUFFER ,
+	new Uint16Array(indices) ,
+	gl.STATIC_DRAW
+    );
+    return buffer;
+}
