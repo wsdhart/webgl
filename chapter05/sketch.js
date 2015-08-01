@@ -23,7 +23,7 @@ var v_color;
 
 var to_radians = Math.PI / 180.0;
 
-var primitive = 2;
+var primitive = 1;
 
 window.onload = function init()
 {
@@ -107,13 +107,13 @@ function create_sphere()
     var horizontal_slice = Math.PI / horizontals;
     var verticals = 10;
     var vertical_slice = 2 * Math.PI / verticals;
-    for(var lattitude = 0; lattitude < horizontals ; lattitude++)
+    for(var lattitude = 0; lattitude <= horizontals ; lattitude++)
     {
 	var theta = lattitude * horizontal_slice;
 	var sin_theta = Math.sin(theta);
 	var cos_theta = Math.cos(theta);
 
-	for(var longitude = 0; longitude < verticals ; longitude++)
+	for(var longitude = 0; longitude <= verticals ; longitude++)
 	{
 	    var phi = longitude * vertical_slice;
 	    var sin_phi = Math.sin(phi);
