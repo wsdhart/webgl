@@ -13,6 +13,8 @@ var u_perspective;
 var rot_matrix;
 
 var shape;
+var shape_indexes;
+var index_buffer;
 var theta = 0.0;
 
 var vertex_buffer;
@@ -47,7 +49,9 @@ function setup()
     program = init_program(gl , "vertex-shader" , "fragment-shader");
     gl.useProgram(program);
 
-    shape = create_sphere();
+    shape = create_sphere(10);
+    shape_indexes = create_indexes(10);
+    index_buffer = gl.createBuffer();
 
     pos_matrix = mat4.create();
     pos_matrix = mat4.identity(pos_matrix);
@@ -73,6 +77,14 @@ function render()
     vertex_buffer = bind_buffer(gl , shape , vertex_buffer);
     v_position = bind_attribute(gl , program , "v_position" , 3 , v_position);
 
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER , index_buffer);
+    gl.bufferData
+    (
+	gl.ELEMENT_ARRAY_BUFFER ,
+	new Uint16Array(shape_indexes) ,
+	gl.STATIC_DRAW
+    );
+
     rot_matrix = mat4.rotate
     (
 	rot_matrix ,
@@ -88,7 +100,14 @@ function render()
     gl.uniformMatrix4fv(u_perspective , false , perspective);
 
     gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.drawArrays(primitive , 0 , shape.length / 3);
+
+    gl.drawElements
+    (
+	primitive ,
+	shape_indexes.length ,
+	gl.UNSIGNED_SHORT ,
+	0
+    );
 
     requestAnimFrame(render);
 }
@@ -100,12 +119,12 @@ function update_primitive(type)
 }
 
 // learningwebgl / webkit team method.
-function create_sphere()
+function create_sphere(slices)
 {
     var nodes = [];
-    var horizontals = 100;
+    var horizontals = slices;
     var horizontal_slice = Math.PI / horizontals;
-    var verticals = 10;
+    var verticals = slices;
     var vertical_slice = 2 * Math.PI / verticals;
     for(var lattitude = 0; lattitude <= horizontals ; lattitude++)
     {
@@ -128,4 +147,26 @@ function create_sphere()
 	}
     }
     return nodes;
+}
+
+function create_indexes(slices)
+{
+    var indexes = [];
+    var horizontals = slices;
+    var verticals = slices;
+    for(var lattitude = 0; lattitude < horizontals ; lattitude++)
+    {
+	for(var longitude = 0; longitude < verticals ; longitude++)
+	{
+	    var first = (lattitude * (verticals + 1)) + longitude;
+	    var second = first + verticals + 1;
+	    indexes.push(first);
+	    indexes.push(second);
+	    indexes.push(first + 1);
+	    indexes.push(second);
+	    indexes.push(second + 1);
+	    indexes.push(first + 1);
+	}
+    }
+    return indexes ;
 }
