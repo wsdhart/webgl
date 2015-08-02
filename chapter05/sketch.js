@@ -120,14 +120,14 @@ function render()
 	gl.UNSIGNED_SHORT ,
 	0
     );
-
-    requestAnimFrame(render);
 }
 
 function update_primitive(type)
 {
     if(0 <= primitive && primitive <= 6)
 	primitive = type;
+
+    render();
 }
 
 // learningwebgl / webkit team method.
@@ -186,14 +186,20 @@ function create_indexes(slices)
 function rotate_x(angle)
 {
     x_theta = angle * to_radians;
+
+    render();
 }
 
 function rotate_y(angle)
 {
     y_theta = angle * to_radians;
+
+    render();
 }
 
 function rotate_z(angle)
 {
     z_theta = angle * to_radians;
+
+    render();
 }
