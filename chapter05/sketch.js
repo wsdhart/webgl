@@ -15,7 +15,10 @@ var rot_matrix;
 var shape;
 var shape_indexes;
 var index_buffer;
-var theta = 0.0;
+
+var x_theta = 0.0;
+var y_theta = 0.0;
+var z_theta = 0.0;
 
 var vertex_buffer;
 var v_position;
@@ -82,8 +85,24 @@ function render()
     (
 	rot_matrix ,
 	pos_matrix ,
-	theta++ * to_radians ,
-	[0 , 1 , 1]
+	x_theta ,
+	[1 , 0 , 0]
+    );
+
+    rot_matrix = mat4.rotate
+    (
+	rot_matrix ,
+	rot_matrix ,
+	y_theta ,
+	[0 , 1 , 0]
+    );
+
+    rot_matrix = mat4.rotate
+    (
+	rot_matrix ,
+	rot_matrix ,
+	z_theta ,
+	[0 , 0 , 1]
     );
 
     u_pos_matrix = gl.getUniformLocation(program , "u_pos_matrix");
@@ -162,4 +181,19 @@ function create_indexes(slices)
 	}
     }
     return indexes ;
+}
+
+function rotate_x(angle)
+{
+    x_theta = angle * to_radians;
+}
+
+function rotate_y(angle)
+{
+    y_theta = angle * to_radians;
+}
+
+function rotate_z(angle)
+{
+    z_theta = angle * to_radians;
 }
