@@ -65,11 +65,10 @@ function setup()
     (
 	perspective ,
 	45.0 ,
-	gl.viewportWidth / gl.viewportHeight ,
+	gl.drawingBufferHeight / gl.drawingBufferWidth ,
 	0.1 ,
 	100.0
     );
-    perspective[0] = 1.7;
 
     rot_matrix = mat4.create();
 }
