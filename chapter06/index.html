@@ -5,6 +5,7 @@
     <script type="text/javascript" src="../common/shader_utils.js"></script>
     <script type="text/javascript" src="../common/gl-matrix.js"></script>
     <script type="text/javascript" src="../common/color_utils.js"></script>
+    <script type="text/javascript" src="sphere.js"></script>
     <script type="text/javascript" src="cad.js"></script>
 
     <script id="vertex-shader" type="x-shader/x-vertex">
@@ -83,6 +84,33 @@
 		 min="-180" max="180" value="0" step="1"
 		 onchange="rotate_z(this.value)"
 		 oninput="rotate_z(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td align="right">Translate X : </td>
+	<td>
+	  <input type="range" id="translate_x"
+		 min="-4" max="4" value="0" step="0.1"
+		 onchange="translate_x(this.value)"
+		 oninput="translate_x(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td align="right">Translate Y : </td>
+	<td>
+	  <input type="range" id="translate_y"
+		 min="-4" max="4" value="0" step="0.1"
+		 onchange="translate_y(this.value)"
+		 oninput="translate_y(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td align="right">Translate Z : </td>
+	<td>
+	  <input type="range" id="translate_z"
+		 min="-4" max="4" value="0" step="0.1"
+		 onchange="translate_z(this.value)"
+		 oninput="translate_z(this.value)"/>
 	</td>
       </tr>
     </table>
