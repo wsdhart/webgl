@@ -25,6 +25,7 @@ var v_position;
 
 var color_buffer;
 var v_color;
+var colors = [];
 
 var to_radians = Math.PI / 180.0;
 
@@ -71,12 +72,17 @@ function setup()
     );
 
     rot_matrix = mat4.create();
+
+    colors = create_grayscale(shape.length / 9 , colors);
 }
 
 function render()
 {
     vertex_buffer = bind_buffer(gl , shape , vertex_buffer);
     v_position = bind_attribute(gl , program , "v_position" , 3 , v_position);
+
+    color_buffer = bind_buffer(gl , colors , color_buffer);
+    v_color = bind_attribute(gl , program , "v_color" , 3 , v_color);
 
     index_buffer = bind_indices(gl , shape_indexes , index_buffer);
 

@@ -4,17 +4,19 @@
     <script type="text/javascript" src="../common/webgl-utils.js"></script>
     <script type="text/javascript" src="../common/shader_utils.js"></script>
     <script type="text/javascript" src="../common/gl-matrix.js"></script>
+    <script type="text/javascript" src="../common/color_utils.js"></script>
     <script type="text/javascript" src="sketch.js"></script>
 
     <script id="vertex-shader" type="x-shader/x-vertex">
       attribute vec4 v_position;
+      attribute vec4 v_color;
       uniform mat4 u_pos_matrix;
       uniform mat4 u_perspective;
       varying vec4 f_color;
       void main()
       {
 	gl_Position = u_perspective * u_pos_matrix * v_position;
-	f_color = v_position * 0.5 + 0.5;
+	f_color = v_color;
       }
     </script>
     <script id="fragment-shader" type="x-shader/x-fragment">
