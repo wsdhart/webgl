@@ -129,7 +129,7 @@ function render()
 
 function update_primitive(type)
 {
-    if(0 <= primitive && primitive <= 6)
+    if(0 <= type && type <= 6)
 	primitive = type;
 
     render();
