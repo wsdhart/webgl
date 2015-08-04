@@ -35,7 +35,7 @@ function setup()
     program = init_program(gl , "vertex-shader" , "fragment-shader");
     gl.useProgram(program);
 
-    var shape = new Sphere(gl , program);
+    var shape = new Sphere(gl , program , 10 , 3);
     shape.create();
     shapes.push(shape);
 
