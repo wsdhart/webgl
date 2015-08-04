@@ -32,8 +32,13 @@ function Sphere(gl , program , h_slices , v_slices)
 
     var primitive = 1;
 
+    var created = false;
+
     this.create = function()
     {
+	if(created)
+	    return;
+
 	shape = this.create_sphere(h_slices , v_slices);
 	shape_indexes = this.create_indexes(h_slices , v_slices);
 
@@ -48,6 +53,8 @@ function Sphere(gl , program , h_slices , v_slices)
 	rot_matrix = mat4.create();
 
 	colors = create_grayscale(shape.length / 9 , colors);
+
+	created = true;
     }
 
     this.render = function()
