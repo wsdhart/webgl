@@ -1,6 +1,6 @@
 "use strict";
 
-function Sphere(gl , program)
+function Sphere(gl , program , h_slices , v_slices)
 {
     this.gl = gl;
     this.program = program;
@@ -34,8 +34,8 @@ function Sphere(gl , program)
 
     this.create = function()
     {
-	shape = this.create_sphere(8);
-	shape_indexes = this.create_indexes(8);
+	shape = this.create_sphere(h_slices , v_slices);
+	shape_indexes = this.create_indexes(h_slices , v_slices);
 
 	pos_matrix = mat4.create();
 	pos_matrix = mat4.identity(pos_matrix);
@@ -140,12 +140,12 @@ function Sphere(gl , program)
     }
 
     // learningwebgl / webkit team method.
-    this.create_sphere = function(slices)
+    this.create_sphere = function(h_slices , v_slices)
     {
 	var nodes = [];
-	var horizontals = slices;
+	var horizontals = h_slices || 8;
 	var horizontal_slice = Math.PI / horizontals;
-	var verticals = slices;
+	var verticals = v_slices || 8;
 	var vertical_slice = 2 * Math.PI / verticals;
 	for(var lattitude = 0; lattitude <= horizontals ; lattitude++)
 	{
@@ -170,11 +170,12 @@ function Sphere(gl , program)
 	return nodes;
     }
 
-    this.create_indexes = function(slices)
+    // learningwebgl / webkit team method.
+    this.create_indexes = function(h_slices , v_slices)
     {
 	var indexes = [];
-	var horizontals = slices;
-	var verticals = slices;
+	var horizontals = h_slices || 8;
+	var verticals = v_slices || 8;
 	for(var lattitude = 0; lattitude < horizontals ; lattitude++)
 	{
 	    for(var longitude = 0; longitude < verticals ; longitude++)
