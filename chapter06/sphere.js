@@ -111,6 +111,11 @@ function Sphere(gl , program , h_slices , v_slices)
 	);
     }
 
+    this.size = function()
+    {
+	return shape_indexes.length;
+    }
+
     this.rotate_x = function(radians)
     {
 	x_theta = radians;
