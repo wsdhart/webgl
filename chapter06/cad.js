@@ -45,7 +45,7 @@ function setup()
     (
 	perspective ,
 	45.0 ,
-	gl.drawingBufferHeight / gl.drawingBufferWidth ,
+	gl.drawingBufferWidth / gl.drawingBufferHeight ,
 	0.1 ,
 	100.0
     );
