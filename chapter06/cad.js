@@ -39,6 +39,10 @@ function setup()
     shape.create();
     shapes.push(shape);
 
+    shape = new Cube(gl , program);
+    shape.create();
+    shapes.push(shape);
+
     perspective = mat4.create();
     perspective = mat4.identity(perspective);
     perspective = mat4.perspective
