@@ -53,7 +53,7 @@ function setup()
 
 function render()
 {
-    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     u_perspective = gl.getUniformLocation(program , "u_perspective");
     gl.uniformMatrix4fv(u_perspective , false , perspective);
