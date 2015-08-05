@@ -106,7 +106,7 @@ function Sphere(gl , program , h_slices , v_slices)
 	(
 	    primitive ,
 	    shape_indexes.length ,
-	    gl.UNSIGNED_SHORT ,
+	    gl.UNSIGNED_BYTE ,
 	    0
 	);
     }

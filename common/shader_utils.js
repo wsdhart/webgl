@@ -130,7 +130,7 @@ function bind_indices(gl , indices , buffer)
     gl.bufferData
     (
 	gl.ELEMENT_ARRAY_BUFFER ,
-	new Uint16Array(indices) ,
+	new Uint8Array(indices) ,
 	gl.STATIC_DRAW
     );
     return buffer;

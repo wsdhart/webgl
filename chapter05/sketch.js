@@ -123,7 +123,7 @@ function render()
     (
 	primitive ,
 	shape_indexes.length ,
-	gl.UNSIGNED_SHORT ,
+	gl.UNSIGNED_BYTE ,
 	0
     );
 }
