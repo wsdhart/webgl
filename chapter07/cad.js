@@ -8,6 +8,7 @@ var perspective;
 var u_perspective;
 
 var to_radians = Math.PI / 180.0;
+var to_degrees = 180.0 / Math.PI;
 
 var shapes = [];
 var current = 0;
@@ -42,6 +43,8 @@ function setup()
     shape = new Cone(gl , program);
     shape.create();
     shapes.push(shape);
+
+    update_object_list();
 
     perspective = mat4.create();
     perspective = mat4.identity(perspective);
@@ -114,4 +117,35 @@ function translate_z(pos)
     shapes[current].translate_z(pos);
 
     render();
+}
+
+function select_object(item)
+{
+    current = item;
+    var input = document.getElementById("primitive");
+    input.value = shapes[current].primitive;
+    input = document.getElementById("rotate_x");
+    input.value = shapes[current].x_theta * to_degrees;
+    input = document.getElementById("rotate_y");
+    input.value = shapes[current].y_theta * to_degrees;
+    input = document.getElementById("rotate_z");
+    input.value = shapes[current].z_theta * to_degrees;
+    input = document.getElementById("translate_x");
+    input.value = shapes[current].x_pos;
+    input = document.getElementById("translate_y");
+    input.value = shapes[current].y_pos;
+    input = document.getElementById("translate_z");
+    input.value = shapes[current].z_pos;
+}
+
+function update_object_list()
+{
+    var list = document.getElementById("select_object");
+    for(var i = 0 ; i < shapes.length ; i++)
+    {
+	var option = document.createElement("option");
+	option.value = i;
+	option.text = shapes[i].name();
+	list.add(option , i);
+    }
 }

@@ -58,3 +58,8 @@ Cone.prototype.create_indexes = function()
     }
     return indexes ;
 }
+
+Cone.prototype.name = function()
+{
+    return "Cone";
+}

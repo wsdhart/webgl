@@ -129,6 +129,11 @@ Shape.prototype.render = function()
     );
 }
 
+Shape.prototype.name = function()
+{
+    return "Unknown";
+}
+
 Shape.prototype.size = function()
 {
     return this.shape_indexes.length;

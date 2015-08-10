@@ -63,3 +63,8 @@ Sphere.prototype.create_indexes = function()
     }
     return indexes ;
 }
+
+Sphere.prototype.name = function()
+{
+    return "Sphere";
+}

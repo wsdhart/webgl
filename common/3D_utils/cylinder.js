@@ -56,3 +56,8 @@ Cylinder.prototype.create_indexes = function()
     }
     return indexes ;
 }
+
+Cylinder.prototype.name = function()
+{
+    return "Cylinder";
+}

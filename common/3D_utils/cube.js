@@ -47,3 +47,8 @@ Cube.prototype.create_indexes = function()
 	]
     return indexes ;
 }
+
+Cube.prototype.name = function()
+{
+    return "Cube";
+}
