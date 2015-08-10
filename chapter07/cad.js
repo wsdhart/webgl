@@ -180,3 +180,11 @@ function set_fgcolor(color)
 
     render();
 }
+
+function set_bgcolor(color)
+{
+    var bg_color = set_color(color);
+    gl.clearColor(bg_color[0] , bg_color[1] , bg_color[2] , bg_color[3]);
+
+    render();
+}

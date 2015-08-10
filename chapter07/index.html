@@ -63,7 +63,7 @@
 	    <option value="6">TRIANGLE_FAN</option>
 	  </select>
 	</td>
-	<td align="right">Color : </td>
+	<td align="right">Object Color : </td>
 	<td>
 	  <input type="color" id="draw_color"
 		 onchange="set_fgcolor(this.value)" value="#000000"/>
@@ -136,6 +136,12 @@
 	<td>
 	  <select id="select_object" onchange="select_object(this.value)">
 	  </select>
+	</td>
+	<td align="right">Background Color : </td>
+	<td>
+	  <input type="color" id="bg_color"
+		 onchange="set_bgcolor(this.value)" value="#ffffff"/>
+	</td>
     </table>
   </body>
 </html>
