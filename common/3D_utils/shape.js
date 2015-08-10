@@ -58,28 +58,8 @@ Shape.prototype.create = function()
     this.created = true;
 }
 
-Shape.prototype.render = function()
+Shape.prototype.update_matrices = function()
 {
-    this.vertex_buffer = bind_buffer
-    (
-	this.gl , this.shape , this.vertex_buffer
-    );
-    this.v_position = bind_attribute
-    (
-	this.gl , this.program , "v_position" , 3 , this.v_position
-    );
-
-    this.color_buffer = bind_buffer(this.gl , this.colors , this.color_buffer);
-    this.v_color = bind_attribute
-    (
-	this.gl , this.program , "v_color" , 3 , this.v_color
-    );
-
-    this.index_buffer = bind_indices
-    (
-	this.gl , this.shape_indexes , this.index_buffer
-    );
-
     this.mov_matrix = mat4.translate
     (
 	this.mov_matrix , this.pos_matrix ,
@@ -109,7 +89,31 @@ Shape.prototype.render = function()
 	this.z_theta ,
 	[0 , 0 , 1]
     );
+}
 
+Shape.prototype.render = function()
+{
+    this.vertex_buffer = bind_buffer
+    (
+	this.gl , this.shape , this.vertex_buffer
+    );
+    this.v_position = bind_attribute
+    (
+	this.gl , this.program , "v_position" , 3 , this.v_position
+    );
+
+    this.color_buffer = bind_buffer(this.gl , this.colors , this.color_buffer);
+    this.v_color = bind_attribute
+    (
+	this.gl , this.program , "v_color" , 3 , this.v_color
+    );
+
+    this.index_buffer = bind_indices
+    (
+	this.gl , this.shape_indexes , this.index_buffer
+    );
+
+    this.update_matrices();
     this.u_pos_matrix = this.gl.getUniformLocation
     (
 	this.program , "u_pos_matrix"
