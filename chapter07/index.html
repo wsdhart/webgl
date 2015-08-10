@@ -1,0 +1,123 @@
+<html>
+  <head>
+    <title>Week 7</title>
+    <script type="text/javascript" src="../common/webgl-utils.js"></script>
+    <script type="text/javascript" src="../common/shader_utils.js"></script>
+    <script type="text/javascript" src="../common/gl-matrix.js"></script>
+    <script type="text/javascript" src="../common/color_utils.js"></script>
+    <script type="text/javascript" src="../common/3D_utils/shape.js"></script>
+    <script type="text/javascript" src="../common/3D_utils/sphere.js"></script>
+    <script type="text/javascript" src="../common/3D_utils/cube.js"></script>
+    <script type="text/javascript" src="../common/3D_utils/cylinder.js">
+    </script>
+    <script type="text/javascript" src="../common/3D_utils/cone.js"></script>
+    <script type="text/javascript" src="cad.js"></script>
+
+    <script id="vertex-shader" type="x-shader/x-vertex">
+      attribute vec4 v_position;
+      attribute vec4 v_color;
+      uniform mat4 u_pos_matrix;
+      uniform mat4 u_perspective;
+      varying vec4 f_color;
+      void main()
+      {
+	gl_Position = u_perspective * u_pos_matrix * v_position;
+	f_color = v_color;
+      }
+    </script>
+    <script id="fragment-shader" type="x-shader/x-fragment">
+      #ifdef GL_FRAGMENT_SHADER_PRECISION_HIGH
+	precision highp float;
+      #else
+	precision mediump float;
+      #endif
+
+      varying vec4 f_color;
+      void main()
+      {
+	gl_FragColor = f_color;
+      }
+    </script>
+
+    <noscript>JavaScript is required to view this page's content.</noscript>
+  </head>
+  <body>
+    <h1>A Mad Tea-Party.</h1>
+    <div align="center">
+      <canvas id="webgl-canvas" width="512" height="384">
+	<img src="../images/teaparty.png"/>
+	<b>HTML5 is required to view this page's content.</b>
+      </canvas>
+    </div>
+    <table>
+      <tr>
+	<td align="right">Draw primitive : </td>
+	<td>
+	  <select id="primitive" onchange="update_primitive(this.value)">
+	    <option value="0">POINTS</option>
+	    <option value="1" selected>LINES</option>
+	    <option value="2">LINE_LOOP</option>
+	    <option value="3">LINE_STRIP</option>
+	    <option value="4">TRIANGLES</option>
+	    <option value="5">TRIANGLE_STRIP</option>
+	    <option value="6">TRIANGLE_FAN</option>
+	  </select>
+	</td>
+      </tr>
+      <tr>
+	<td align="right">Rotate X : </td>
+	<td>
+	  <input type="range" id="rotate_x"
+		 min="-180" max="180" value="0" step="1"
+		 onchange="rotate_x(this.value)"
+		 oninput="rotate_x(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td align="right">Rotate Y : </td>
+	<td>
+	  <input type="range" id="rotate_y"
+		 min="-180" max="180" value="0" step="1"
+		 onchange="rotate_y(this.value)"
+		 oninput="rotate_y(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td align="right">Rotate Z : </td>
+	<td>
+	  <input type="range" id="rotate_z"
+		 min="-180" max="180" value="0" step="1"
+		 onchange="rotate_z(this.value)"
+		 oninput="rotate_z(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td align="right">Translate X : </td>
+	<td>
+	  <input type="range" id="translate_x"
+		 min="-4" max="4" value="0" step="0.1"
+		 onchange="translate_x(this.value)"
+		 oninput="translate_x(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td align="right">Translate Y : </td>
+	<td>
+	  <input type="range" id="translate_y"
+		 min="-4" max="4" value="0" step="0.1"
+		 onchange="translate_y(this.value)"
+		 oninput="translate_y(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td align="right">Translate Z : </td>
+	<td>
+	  <input type="range" id="translate_z"
+		 min="-4" max="4" value="0" step="0.1"
+		 onchange="translate_z(this.value)"
+		 oninput="translate_z(this.value)"/>
+	</td>
+      </tr>
+    </table>
+  </body>
+</html>
