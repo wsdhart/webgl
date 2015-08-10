@@ -49,7 +49,7 @@
 	<b>HTML5 is required to view this page's content.</b>
       </canvas>
     </div>
-    <table>
+    <table cellpadding="4">
       <tr>
 	<td align="right">Draw primitive : </td>
 	<td>
@@ -63,11 +63,11 @@
 	    <option value="6">TRIANGLE_FAN</option>
 	  </select>
 	</td>
+	<td align="right">Color : </td>
 	<td>
 	  <input type="color" id="draw_color"
 		 onchange="set_fgcolor(this.value)" value="#000000"/>
 	</td>
-	<td align="left"> : Color</td>
       </tr>
       <tr>
 	<td align="right">Rotate X : </td>
@@ -77,13 +77,20 @@
 		 onchange="rotate_x(this.value)"
 		 oninput="rotate_x(this.value)"/>
 	</td>
+	<td align="right">Translate X : </td>
+	<td>
+	  <input type="range" id="translate_x"
+		 min="-4" max="4" value="0" step="0.1"
+		 onchange="translate_x(this.value)"
+		 oninput="translate_x(this.value)"/>
+	</td>
+	<td align="right">Scale X : </td>
 	<td>
 	  <input type="range" id="scale_x"
 		 min="0.1" max="4.0" value="1.0" step="0.1"
 		 onchange="scale_x(this.value)"
 		 oninput="scale_x(this.value)"/>
 	</td>
-	<td align="left"> : Scale X</td>
       </tr>
       <tr>
 	<td align="right">Rotate Y : </td>
@@ -93,13 +100,20 @@
 		 onchange="rotate_y(this.value)"
 		 oninput="rotate_y(this.value)"/>
 	</td>
+	<td align="right">Translate Y : </td>
+	<td>
+	  <input type="range" id="translate_y"
+		 min="-4" max="4" value="0" step="0.1"
+		 onchange="translate_y(this.value)"
+		 oninput="translate_y(this.value)"/>
+	</td>
+	<td align="right">Scale Y : </td>
 	<td>
 	  <input type="range" id="scale_y"
 		 min="0.1" max="4.0" value="1.0" step="0.1"
 		 onchange="scale_y(this.value)"
 		 oninput="scale_y(this.value)"/>
 	</td>
-	<td align="left"> : Scale Y</td>
       </tr>
       <tr>
 	<td align="right">Rotate Z : </td>
@@ -109,26 +123,6 @@
 		 onchange="rotate_z(this.value)"
 		 oninput="rotate_z(this.value)"/>
 	</td>
-      </tr>
-      <tr>
-	<td align="right">Translate X : </td>
-	<td>
-	  <input type="range" id="translate_x"
-		 min="-4" max="4" value="0" step="0.1"
-		 onchange="translate_x(this.value)"
-		 oninput="translate_x(this.value)"/>
-	</td>
-      </tr>
-      <tr>
-	<td align="right">Translate Y : </td>
-	<td>
-	  <input type="range" id="translate_y"
-		 min="-4" max="4" value="0" step="0.1"
-		 onchange="translate_y(this.value)"
-		 oninput="translate_y(this.value)"/>
-	</td>
-      </tr>
-      <tr>
 	<td align="right">Translate Z : </td>
 	<td>
 	  <input type="range" id="translate_z"
