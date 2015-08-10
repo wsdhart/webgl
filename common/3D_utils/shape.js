@@ -26,9 +26,8 @@ function Shape(gl , program)
     var vertex_buffer;
     var v_position;
 
-    var color_buffer;
-    var v_color;
-    var colors = [];
+    var u_color;
+    this.color = [0 , 0 , 0 , 1];
 
     this.primitive = 1;
 
@@ -53,7 +52,7 @@ Shape.prototype.create = function()
     this.mov_matrix = mat4.create();
     this.rot_matrix = mat4.create();
 
-    this.colors = create_grayscale(this.shape.length / 9 , this.colors);
+    this.u_color = gl.getUniformLocation(program , "u_color");
 
     this.created = true;
 }
@@ -102,11 +101,7 @@ Shape.prototype.render = function()
 	this.gl , this.program , "v_position" , 3 , this.v_position
     );
 
-    this.color_buffer = bind_buffer(this.gl , this.colors , this.color_buffer);
-    this.v_color = bind_attribute
-    (
-	this.gl , this.program , "v_color" , 3 , this.v_color
-    );
+    this.gl.uniform4fv(this.u_color , new Float32Array(this.color));
 
     this.index_buffer = bind_indices
     (

@@ -124,18 +124,23 @@ function select_object(item)
     current = item;
     var input = document.getElementById("primitive");
     input.value = shapes[current].primitive;
+
     input = document.getElementById("rotate_x");
     input.value = shapes[current].x_theta * to_degrees;
     input = document.getElementById("rotate_y");
     input.value = shapes[current].y_theta * to_degrees;
     input = document.getElementById("rotate_z");
     input.value = shapes[current].z_theta * to_degrees;
+
     input = document.getElementById("translate_x");
     input.value = shapes[current].x_pos;
     input = document.getElementById("translate_y");
     input.value = shapes[current].y_pos;
     input = document.getElementById("translate_z");
     input.value = shapes[current].z_pos;
+
+    input = document.getElementById("draw_color");
+    input.value = get_color(shapes[current].color);
 }
 
 function update_object_list()
@@ -148,4 +153,11 @@ function update_object_list()
 	option.text = shapes[i].name();
 	list.add(option , i);
     }
+}
+
+function set_fgcolor(color)
+{
+    shapes[current].color = set_color(color);
+
+    render();
 }
