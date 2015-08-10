@@ -67,7 +67,7 @@
 	  <input type="color" id="draw_color"
 		 onchange="set_fgcolor(this.value)" value="#000000"/>
 	</td>
-	<td align="right"> : Color</td>
+	<td align="left"> : Color</td>
       </tr>
       <tr>
 	<td align="right">Rotate X : </td>
@@ -77,6 +77,13 @@
 		 onchange="rotate_x(this.value)"
 		 oninput="rotate_x(this.value)"/>
 	</td>
+	<td>
+	  <input type="range" id="scale_x"
+		 min="0.1" max="4.0" value="1.0" step="0.1"
+		 onchange="scale_x(this.value)"
+		 oninput="scale_x(this.value)"/>
+	</td>
+	<td align="left"> : Scale X</td>
       </tr>
       <tr>
 	<td align="right">Rotate Y : </td>
@@ -86,6 +93,13 @@
 		 onchange="rotate_y(this.value)"
 		 oninput="rotate_y(this.value)"/>
 	</td>
+	<td>
+	  <input type="range" id="scale_y"
+		 min="0.1" max="4.0" value="1.0" step="0.1"
+		 onchange="scale_y(this.value)"
+		 oninput="scale_y(this.value)"/>
+	</td>
+	<td align="left"> : Scale Y</td>
       </tr>
       <tr>
 	<td align="right">Rotate Z : </td>

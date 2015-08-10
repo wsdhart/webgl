@@ -119,6 +119,20 @@ function translate_z(pos)
     render();
 }
 
+function scale_x(pos)
+{
+    shapes[current].scale_x(pos);
+
+    render();
+}
+
+function scale_y(pos)
+{
+    shapes[current].scale_y(pos);
+
+    render();
+}
+
 function select_object(item)
 {
     current = item;
@@ -141,6 +155,11 @@ function select_object(item)
 
     input = document.getElementById("draw_color");
     input.value = get_color(shapes[current].color);
+
+    input = document.getElementById("scale_x");
+    input.value = shapes[current].x_scale;
+    input = document.getElementById("scale_y");
+    input.value = shapes[current].y_scale;
 }
 
 function update_object_list()
