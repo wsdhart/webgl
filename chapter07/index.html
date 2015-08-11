@@ -132,7 +132,7 @@
 	</td>
       </tr>
       <tr>
-	<td align="right">Select : </td>
+	<td align="right">Select Object : </td>
 	<td>
 	  <select id="select_object" onchange="select_object(this.value)">
 	  </select>
@@ -141,6 +141,16 @@
 	<td>
 	  <input type="color" id="bg_color"
 		 onchange="set_bgcolor(this.value)" value="#ffffff"/>
+	</td>
+	<td align="right">Create Object : </td>
+	<td>
+	  <select id="create_object" onchange="create_object(this.value)">
+	    <option selected>---</option>
+	    <option value="0">Cone</option>
+	    <option value="1">Cylinder</option>
+	    <option value="2">Sphere</option>
+	    <option value="3">Cube</option>
+	  </select>
 	</td>
     </table>
   </body>

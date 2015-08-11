@@ -36,16 +36,6 @@ function setup()
     program = init_program(gl , "vertex-shader" , "fragment-shader");
     gl.useProgram(program);
 
-    var shape = new Cylinder(gl , program);
-    shape.create();
-    shapes.push(shape);
-
-    shape = new Cone(gl , program);
-    shape.create();
-    shapes.push(shape);
-
-    update_object_list();
-
     perspective = mat4.create();
     perspective = mat4.identity(perspective);
     perspective = mat4.perspective
@@ -69,66 +59,27 @@ function render()
 	shapes[i].render();
 }
 
-function update_primitive(type)
+function create_object(type)
 {
-    if(0 <= type && type <= 6)
-	shapes[current].change_primitive(type);
+    var element = document.getElementById("create_object");
+    element.selectedIndex = 0;;
 
-    render();
-}
+    var shape;
+    if(type == 0)
+	shape = new Cone(gl , program);
+    else if(type == 1)
+	shape = new Cylinder(gl , program);
+    else if(type == 2)
+	shape = new Sphere(gl , program);
+    else if(type == 3)
+	shape = new Cube(gl , program);
+    else return ;
 
-function rotate_x(angle)
-{
-    shapes[current].rotate_x(angle * to_radians);
+    shape.create();
+    shapes.push(shape);
 
-    render();
-}
-
-function rotate_y(angle)
-{
-    shapes[current].rotate_y(angle * to_radians);
-
-    render();
-}
-
-function rotate_z(angle)
-{
-    shapes[current].rotate_z(angle * to_radians);
-
-    render();
-}
-
-function translate_x(pos)
-{
-    shapes[current].translate_x(pos);
-
-    render();
-}
-
-function translate_y(pos)
-{
-    shapes[current].translate_y(pos);
-
-    render();
-}
-
-function translate_z(pos)
-{
-    shapes[current].translate_z(pos);
-
-    render();
-}
-
-function scale_x(pos)
-{
-    shapes[current].scale_x(pos);
-
-    render();
-}
-
-function scale_y(pos)
-{
-    shapes[current].scale_y(pos);
+    update_object_list();
+    select_object(shapes.length - 1);
 
     render();
 }
@@ -136,35 +87,49 @@ function scale_y(pos)
 function select_object(item)
 {
     current = item;
-    var input = document.getElementById("primitive");
-    input.value = shapes[current].primitive;
+
+    var input;
+
+    input = document.getElementById("select_object");
+    input.selectedIndex = item;
+
+    var current_shape = shapes[current];
+    if(!current_shape)
+	return
+
+    input = document.getElementById("primitive");
+    input.value = current_shape.primitive;
 
     input = document.getElementById("rotate_x");
-    input.value = shapes[current].x_theta * to_degrees;
+    input.value = current_shape.x_theta * to_degrees;
     input = document.getElementById("rotate_y");
-    input.value = shapes[current].y_theta * to_degrees;
+    input.value = current_shape.y_theta * to_degrees;
     input = document.getElementById("rotate_z");
-    input.value = shapes[current].z_theta * to_degrees;
+    input.value = current_shape.z_theta * to_degrees;
 
     input = document.getElementById("translate_x");
-    input.value = shapes[current].x_pos;
+    input.value = current_shape.x_pos;
     input = document.getElementById("translate_y");
-    input.value = shapes[current].y_pos;
+    input.value = current_shape.y_pos;
     input = document.getElementById("translate_z");
-    input.value = shapes[current].z_pos;
+    input.value = current_shape.z_pos;
 
     input = document.getElementById("draw_color");
-    input.value = get_color(shapes[current].color);
+    input.value = get_color(current_shape.color);
 
     input = document.getElementById("scale_x");
-    input.value = shapes[current].x_scale;
+    input.value = current_shape.x_scale;
     input = document.getElementById("scale_y");
-    input.value = shapes[current].y_scale;
+    input.value = current_shape.y_scale;
 }
 
 function update_object_list()
 {
     var list = document.getElementById("select_object");
+
+    while(list.firstChild)
+	list.removeChild(list.firstChild);
+
     for(var i = 0 ; i < shapes.length ; i++)
     {
 	var option = document.createElement("option");
@@ -174,11 +139,94 @@ function update_object_list()
     }
 }
 
+function update_primitive(type)
+{
+    if(shapes[current] && 0 <= type && type <= 6)
+    {
+	shapes[current].change_primitive(type);
+	render();
+    }
+}
+
+function rotate_x(angle)
+{
+    if(shapes[current])
+    {
+	shapes[current].rotate_x(angle * to_radians);
+	render();
+    }
+}
+
+function rotate_y(angle)
+{
+    if(shapes[current])
+    {
+	shapes[current].rotate_y(angle * to_radians);
+	render();
+    }
+}
+
+function rotate_z(angle)
+{
+    if(shapes[current])
+    {
+	shapes[current].rotate_z(angle * to_radians);
+	render();
+    }
+}
+
+function translate_x(pos)
+{
+    if(shapes[current])
+    {
+	shapes[current].translate_x(pos);
+	render();
+    }
+}
+
+function translate_y(pos)
+{
+    if(shapes[current])
+    {
+	shapes[current].translate_y(pos);
+	render();
+    }
+}
+
+function translate_z(pos)
+{
+    if(shapes[current])
+    {
+	shapes[current].translate_z(pos);
+	render();
+    }
+}
+
+function scale_x(pos)
+{
+    if(shapes[current])
+    {
+	shapes[current].scale_x(pos);
+	render();
+    }
+}
+
+function scale_y(pos)
+{
+    if(shapes[current])
+    {
+	shapes[current].scale_y(pos);
+	render();
+    }
+}
+
 function set_fgcolor(color)
 {
-    shapes[current].color = set_color(color);
-
-    render();
+    if(shapes[current])
+    {
+	shapes[current].color = set_color(color);
+	render();
+    }
 }
 
 function set_bgcolor(color)
