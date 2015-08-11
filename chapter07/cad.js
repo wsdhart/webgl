@@ -139,6 +139,21 @@ function update_object_list()
     }
 }
 
+function delete_object()
+{
+    var j = 0;
+    for(var i = 0 ; i < shapes.length ; i++)
+    {
+	shapes[j++] = i != current ? shapes[i] : shapes[++i];
+    }
+    shapes.pop();
+
+    update_object_list();
+    select_object(0);
+
+    render();
+}
+
 function update_primitive(type)
 {
     if(shapes[current] && 0 <= type && type <= 6)
