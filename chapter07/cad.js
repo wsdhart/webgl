@@ -43,7 +43,7 @@ function setup()
 	perspective ,
 	45.0 ,
 	gl.drawingBufferWidth / gl.drawingBufferHeight ,
-	0.1 ,
+	0.001 ,
 	100.0
     );
 }
