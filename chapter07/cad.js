@@ -30,7 +30,7 @@ function setup()
 {
     gl.viewport(0 , 0 , gl.drawingBufferWidth , gl.drawingBufferHeight);
     gl.clearColor(1.0 , 1.0 , 1.0 , 1.0);
-    gl.lineWidth(10.0);
+    gl.lineWidth(1.0);
     gl.enable(gl.DEPTH_TEST);
 
     program = init_program(gl , "vertex-shader" , "fragment-shader");
