@@ -70,7 +70,7 @@ function create_object(type)
     else if(type == 1)
 	shape = new Cylinder(gl , program);
     else if(type == 2)
-	shape = new Sphere(gl , program);
+	shape = new Sphere(gl , program , 15 , 15);
     else if(type == 3)
 	shape = new Cube(gl , program);
     else return ;
