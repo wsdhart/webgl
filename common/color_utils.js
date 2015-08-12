@@ -79,11 +79,28 @@ function get_color(colors)
     var b = colors[2] * 255;
 
     var rs = r.toString(16);
-    rs = rs.length == 2 ? rs : "0" + rs;
+    if(rs.length == 0)
+	rs = "00";
+    else if(rs.length == 1)
+	rs = "0" + rs;
+    else if(rs.length > 2)
+	rs = rs.substring(rs.length - 2 , rs.length - 1);
+
     var gs = g.toString(16);
-    gs = gs.length == 2 ? gs : "0" + gs;
+    if(gl.length == 0)
+	gs = "00";
+    else if(gs.length == 1)
+	gs = "0" + gs;
+    else if(gs.length > 2)
+	gs = gs.substring(gs.length - 2 , gs.length - 1);
+
     var bs = b.toString(16);
-    bs = bs.length == 2 ? bs : "0" + bs;
+    if(bs.length == 0 )
+	bs = "00";
+    else if(bs.length == 1)
+	bs = "0" + bs;
+    else if(bs.length > 2)
+	bs = bs.substring(bs.length - 2 , bs.length);
 
     return "#" + rs + gs + bs;
 }
