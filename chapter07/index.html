@@ -68,6 +68,11 @@
 	  <input type="color" id="draw_color"
 		 onchange="set_fgcolor(this.value)" value="#000000"/>
 	</td>
+	<td>&nbsp;</td>
+	<td>
+	  <input type="button" id="delete_object" value="Delete Object"
+		 onclick="delete_object()"/>
+	</td>
       </tr>
       <tr>
 	<td align="right">Rotate X : </td>
@@ -129,11 +134,6 @@
 		 min="-4" max="4" value="0" step="0.1"
 		 onchange="translate_z(this.value)"
 		 oninput="translate_z(this.value)"/>
-	</td>
-	<td>&nbsp;</td>
-	<td>
-	  <input type="button" id="delete_object" value="Delete Object"
-		 onclick="delete_object()"/>
 	</td>
       </tr>
     </table>
