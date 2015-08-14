@@ -74,9 +74,9 @@ function set_color(color)
  */
 function get_color(colors)
 {
-    var r = colors[0] * 255;
-    var g = colors[1] * 255;
-    var b = colors[2] * 255;
+    var r = Math.round(colors[0] * 255);
+    var g = Math.round(colors[1] * 255);
+    var b = Math.round(colors[2] * 255);
 
     var rs = r.toString(16);
     if(rs.length == 0)
@@ -84,7 +84,7 @@ function get_color(colors)
     else if(rs.length == 1)
 	rs = "0" + rs;
     else if(rs.length > 2)
-	rs = rs.substring(rs.length - 2 , rs.length - 1);
+	rs = rs.substring(0 , 2);
 
     var gs = g.toString(16);
     if(gl.length == 0)
@@ -92,7 +92,7 @@ function get_color(colors)
     else if(gs.length == 1)
 	gs = "0" + gs;
     else if(gs.length > 2)
-	gs = gs.substring(gs.length - 2 , gs.length - 1);
+	gs = gs.substring(0 , 2);
 
     var bs = b.toString(16);
     if(bs.length == 0 )
@@ -100,7 +100,7 @@ function get_color(colors)
     else if(bs.length == 1)
 	bs = "0" + bs;
     else if(bs.length > 2)
-	bs = bs.substring(bs.length - 2 , bs.length);
+	bs = bs.substring(0 , 2);
 
     return "#" + rs + gs + bs;
 }
