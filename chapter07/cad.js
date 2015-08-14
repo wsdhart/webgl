@@ -99,8 +99,13 @@ function select_object(item)
     if(!current_shape)
 	return
 
-    input = document.getElementById("primitive");
-    input.value = current_shape.primitive;
+    input = document.getElementById("drawtype");
+    if(current_shape.wireframe && current_shape.fill)
+	input.value = 1;
+    else if(current_shape.wireframe)
+	input.value = 0;
+    else if(current_shape.fill)
+	input.value = 2;
 
     input = document.getElementById("rotate_x");
     input.value = current_shape.x_theta * to_degrees;
@@ -116,8 +121,11 @@ function select_object(item)
     input = document.getElementById("translate_z");
     input.value = current_shape.z_pos;
 
-    input = document.getElementById("draw_color");
-    input.value = get_color(current_shape.color);
+    input = document.getElementById("fill_color");
+    input.value = get_color(current_shape.fill_color);
+
+    input = document.getElementById("trim_color");
+    input.value = get_color(current_shape.trim_color);
 
     input = document.getElementById("scale_x");
     input.value = current_shape.x_scale;
@@ -156,11 +164,18 @@ function delete_object()
     render();
 }
 
-function update_primitive(type)
+function update_draw_type(type)
 {
-    if(shapes[current] && 0 <= type && type <= 6)
+    if(shapes[current])
     {
-	shapes[current].change_primitive(type);
+	if(type == 0)
+	    shapes[current].change_draw_type(true , false);
+	else if(type == 1)
+	    shapes[current].change_draw_type(true , true);
+	else if(type == 2)
+	    shapes[current].change_draw_type(false , true);
+	else
+	    return;
 	render();
     }
 }
@@ -237,11 +252,20 @@ function scale_y(pos)
     }
 }
 
-function set_fgcolor(color)
+function set_fillcolor(color)
 {
     if(shapes[current])
     {
-	shapes[current].color = set_color(color);
+	shapes[current].fill_color = set_color(color);
+	render();
+    }
+}
+
+function set_trimcolor(color)
+{
+    if(shapes[current])
+    {
+	shapes[current].trim_color = set_color(color);
 	render();
     }
 }

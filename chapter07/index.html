@@ -53,27 +53,23 @@
     </div>
     <table cellpadding="4">
       <tr>
-	<td align="right">Draw primitive : </td>
+	<td align="right">Draw Type : </td>
 	<td>
-	  <select id="primitive" onchange="update_primitive(this.value)">
-	    <option value="0">POINTS</option>
-	    <option value="1" selected>LINES</option>
-	    <option value="2">LINE_LOOP</option>
-	    <option value="3">LINE_STRIP</option>
-	    <option value="4">TRIANGLES</option>
-	    <option value="5">TRIANGLE_STRIP</option>
-	    <option value="6">TRIANGLE_FAN</option>
+	  <select id="drawtype" onchange="update_draw_type(this.value)">
+	    <option value="0" selected>Wireframe</option>
+	    <option value="1">Wireframe and Fill</option>
+	    <option value="2">Fill</option>
 	  </select>
 	</td>
-	<td align="right">Object Color : </td>
+	<td align="right">Fill Color : </td>
 	<td>
-	  <input type="color" id="draw_color"
-		 onchange="set_fgcolor(this.value)" value="#000000"/>
+	  <input type="color" id="fill_color"
+		 onchange="set_fillcolor(this.value)" value="#ffffff"/>
 	</td>
-	<td>&nbsp;</td>
+	<td align="right">Trim Color : </td>
 	<td>
-	  <input type="button" id="delete_object" value="Delete Object"
-		 onclick="delete_object()"/>
+	  <input type="color" id="trim_color"
+		 onchange="set_trimcolor(this.value)" value="#000000"/>
 	</td>
       </tr>
       <tr>
@@ -136,6 +132,11 @@
 		 min="-90" max="3" value="0" step="0.1"
 		 onchange="translate_z(this.value)"
 		 oninput="translate_z(this.value)"/>
+	</td>
+	<td>&nbsp;</td>
+	<td>
+	  <input type="button" id="delete_object" value="Delete Object"
+		 onclick="delete_object()"/>
 	</td>
       </tr>
     </table>

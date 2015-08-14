@@ -29,9 +29,11 @@ function Shape(gl , program)
     var v_position;
 
     var u_color;
-    this.color = [0 , 0 , 0 , 1];
+    this.fill_color = [1 , 1 , 1 , 1];
+    this.trim_color = [0 , 0 , 0 , 1];
 
-    this.primitive = 1;
+    this.wireframe = true;
+    this.fill = false;
 
     var created = false;
 }
@@ -94,7 +96,14 @@ Shape.prototype.update_matrices = function()
 Shape.prototype.render = function()
 {
     this.update_matrices();
+    if(this.wireframe)
+	this.subrender(3 , this.trim_color);
+    if(this.fill)
+	this.subrender(5 , this.fill_color);
+}
 
+Shape.prototype.subrender = function(primitive , color)
+{
     for(var i = 0 ; i < this.shapes.length ; i++)
     {
 	this.vertex_buffer = bind_buffer
@@ -106,7 +115,7 @@ Shape.prototype.render = function()
 	    this.gl , this.program , "v_position" , 3 , this.v_position
 	);
 
-	this.gl.uniform4fv(this.u_color , new Float32Array(this.color));
+	this.gl.uniform4fv(this.u_color , new Float32Array(color));
 
 	this.index_buffer = bind_indices
 	(
@@ -121,7 +130,7 @@ Shape.prototype.render = function()
 
 	this.gl.drawElements
 	(
-	    this.primitive ,
+	    primitive ,
 	    this.shape_indices[i].length ,
 	    this.gl.UNSIGNED_BYTE ,
 	    0
@@ -182,9 +191,10 @@ Shape.prototype.scale_y = function(scale)
     this.y_scale = scale;
 }
 
-Shape.prototype.change_primitive = function(proto)
+Shape.prototype.change_draw_type = function(wire,solid)
 {
-    this.primitive = proto;
+    this.wireframe = wire;
+    this.fill = solid;
 }
 
 Shape.prototype.create_shapes = function()
