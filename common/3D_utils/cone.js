@@ -10,7 +10,7 @@ function Cone(gl , program , h_slices , v_slices)
 
 Cone.prototype = new Shape();
 
-Cone.prototype.create_shape = function()
+Cone.prototype.create_shapes = function()
 {
     var nodes = [];
     var horizontals = this.h_slices || 2;
@@ -34,12 +34,35 @@ Cone.prototype.create_shape = function()
 	    nodes.push(z);
 	}
     }
-    return nodes;
+
+    this.shapes.push(nodes);
+    nodes = [];
+
+    var pos = Math.PI / 2;
+    var angle = (2 * Math.PI) / verticals;
+
+    nodes.push(0.0);
+    nodes.push(-1.0);
+    nodes.push(0.0);
+
+    for(var i = 0 ; i < (verticals * 3) ; i+=3)
+    {
+	nodes.push(Math.cos(pos));
+	nodes.push(-1.0);
+	nodes.push(Math.sin(pos));
+	pos -= angle;
+    }
+
+    nodes.push(Math.cos(pos));
+    nodes.push(-1.0);
+    nodes.push(Math.sin(pos));
+
+    this.shapes.push(nodes);
 }
 
-Cone.prototype.create_indexes = function()
+Cone.prototype.create_indices = function()
 {
-    var indexes = [];
+    var indices = [];
     var horizontals = this.h_slices || 2;
     var verticals = this.v_slices || 24;
     for(var lattitude = 0; lattitude < horizontals ; lattitude++)
@@ -48,15 +71,24 @@ Cone.prototype.create_indexes = function()
 	{
 	    var first = (lattitude * (verticals + 1)) + longitude;
 	    var second = first + verticals + 1;
-	    indexes.push(first);
-	    indexes.push(second);
-	    indexes.push(first + 1);
-	    indexes.push(second);
-	    indexes.push(second + 1);
-	    indexes.push(first + 1);
+	    indices.push(first);
+	    indices.push(second);
+	    indices.push(first + 1);
+	    indices.push(second);
+	    indices.push(second + 1);
+	    indices.push(first + 1);
 	}
     }
-    return indexes ;
+    this.shape_indices.push(indices);
+
+    indices = [];
+    for(var i = 0 ; i < verticals ; i++)
+    {
+	indices.push(0);
+	indices.push(i + 1);
+	indices.push(i + 2);
+    }
+    this.shape_indices.push(indices);
 }
 
 Cone.prototype.name = function()

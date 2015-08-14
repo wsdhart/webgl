@@ -10,12 +10,35 @@ function Cylinder(gl , program , h_slices , v_slices)
 
 Cylinder.prototype = new Shape();
 
-Cylinder.prototype.create_shape = function()
+Cylinder.prototype.create_shapes = function()
 {
     var nodes = [];
+    var verticals = this.v_slices || 24;
+
+    var pos = Math.PI / 2;
+    var angle = (2 * Math.PI) / verticals;
+
+    nodes.push(0.0);
+    nodes.push(1.0);
+    nodes.push(0.0);
+
+    for(var i = 0 ; i < (verticals * 3) ; i+=3)
+    {
+	nodes.push(Math.cos(pos));
+	nodes.push(1.0);
+	nodes.push(Math.sin(pos));
+	pos -= angle;
+    }
+
+    nodes.push(Math.cos(pos));
+    nodes.push(1.0);
+    nodes.push(Math.sin(pos));
+
+    this.shapes.push(nodes);
+
+    nodes = [];
     var horizontals = this.h_slices || 2;
     var horizontal_slice = 2 / horizontals;
-    var verticals = this.v_slices || 24;
     var vertical_slice = 2 * Math.PI / verticals;
 
     for(var lattitude = 0; lattitude <= horizontals ; lattitude++)
@@ -32,29 +55,67 @@ Cylinder.prototype.create_shape = function()
 	    nodes.push(z);
 	}
     }
-    return nodes;
+    this.shapes.push(nodes);
+
+    nodes = [];
+    nodes.push(0.0);
+    nodes.push(-1.0);
+    nodes.push(0.0);
+
+    for(var i = 0 ; i < (verticals * 3) ; i+=3)
+    {
+	nodes.push(Math.cos(pos));
+	nodes.push(-1.0);
+	nodes.push(Math.sin(pos));
+	pos -= angle;
+    }
+
+    nodes.push(Math.cos(pos));
+    nodes.push(-1.0);
+    nodes.push(Math.sin(pos));
+
+    this.shapes.push(nodes);
 }
 
-Cylinder.prototype.create_indexes = function()
+Cylinder.prototype.create_indices = function()
 {
-    var indexes = [];
-    var horizontals = this.h_slices || 2;
+    var indices = [];
     var verticals = this.v_slices || 24;
+
+    for(var i = 0 ; i < verticals ; i++)
+    {
+	indices.push(0);
+	indices.push(i + 1);
+	indices.push(i + 2);
+    }
+    this.shape_indices.push(indices);
+
+    indices = [];
+    var horizontals = this.h_slices || 2;
     for(var lattitude = 0; lattitude < horizontals ; lattitude++)
     {
 	for(var longitude = 0; longitude < verticals ; longitude++)
 	{
 	    var first = (lattitude * (verticals + 1)) + longitude;
 	    var second = first + verticals + 1;
-	    indexes.push(first);
-	    indexes.push(second);
-	    indexes.push(first + 1);
-	    indexes.push(second);
-	    indexes.push(second + 1);
-	    indexes.push(first + 1);
+	    indices.push(first);
+	    indices.push(second);
+	    indices.push(first + 1);
+	    indices.push(second);
+	    indices.push(second + 1);
+	    indices.push(first + 1);
 	}
     }
-    return indexes ;
+    this.shape_indices.push(indices);
+
+    indices = [];
+    for(var i = 0 ; i < verticals ; i++)
+    {
+	indices.push(0);
+	indices.push(i + 1);
+	indices.push(i + 2);
+    }
+    this.shape_indices.push(indices);
 }
 
 Cylinder.prototype.name = function()

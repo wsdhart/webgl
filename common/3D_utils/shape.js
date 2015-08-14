@@ -10,8 +10,8 @@ function Shape(gl , program)
 
     var mov_matrix;
 
-    var shape;
-    var shape_indexes;
+    this.shapes = [];
+    this.shape_indices = [];
     var index_buffer;
 
     this.x_theta = 0.0;
@@ -41,8 +41,8 @@ Shape.prototype.create = function()
     if(this.created)
 	return;
 
-    this.shape = this.create_shape();
-    this.shape_indexes = this.create_indexes();
+    this.create_shapes();
+    this.create_indices();
 
     this.pos_matrix = mat4.create();
     this.pos_matrix = mat4.identity(this.pos_matrix);
@@ -93,36 +93,40 @@ Shape.prototype.update_matrices = function()
 
 Shape.prototype.render = function()
 {
-    this.vertex_buffer = bind_buffer
-    (
-	this.gl , this.shape , this.vertex_buffer
-    );
-    this.v_position = bind_attribute
-    (
-	this.gl , this.program , "v_position" , 3 , this.v_position
-    );
-
-    this.gl.uniform4fv(this.u_color , new Float32Array(this.color));
-
-    this.index_buffer = bind_indices
-    (
-	this.gl , this.shape_indexes , this.index_buffer
-    );
-
     this.update_matrices();
-    this.u_pos_matrix = this.gl.getUniformLocation
-    (
-	this.program , "u_pos_matrix"
-    );
-    this.gl.uniformMatrix4fv(this.u_pos_matrix , false , this.mov_matrix);
 
-    this.gl.drawElements
-    (
-	this.primitive ,
-	this.shape_indexes.length ,
-	this.gl.UNSIGNED_BYTE ,
-	0
-    );
+    for(var i = 0 ; i < this.shapes.length ; i++)
+    {
+	this.vertex_buffer = bind_buffer
+	(
+	    this.gl , this.shapes[i] , this.vertex_buffer
+	);
+	this.v_position = bind_attribute
+	(
+	    this.gl , this.program , "v_position" , 3 , this.v_position
+	);
+
+	this.gl.uniform4fv(this.u_color , new Float32Array(this.color));
+
+	this.index_buffer = bind_indices
+	(
+	    this.gl , this.shape_indices[i] , this.index_buffer
+	);
+
+	this.u_pos_matrix = this.gl.getUniformLocation
+	(
+	    this.program , "u_pos_matrix"
+	);
+	this.gl.uniformMatrix4fv(this.u_pos_matrix , false , this.mov_matrix);
+
+	this.gl.drawElements
+	(
+	    this.primitive ,
+	    this.shape_indices[i].length ,
+	    this.gl.UNSIGNED_BYTE ,
+	    0
+	);
+    }
 }
 
 Shape.prototype.name = function()
@@ -132,7 +136,10 @@ Shape.prototype.name = function()
 
 Shape.prototype.size = function()
 {
-    return this.shape_indexes.length;
+    var count = 0;
+    for(var i = 0 ; i < this.shape_indices.length ; i++)
+	count += this.shape_indices[i].length;
+    return count;
 }
 
 Shape.prototype.rotate_x = function(radians)
@@ -180,14 +187,14 @@ Shape.prototype.change_primitive = function(proto)
     this.primitive = proto;
 }
 
-Shape.prototype.create_shape = function()
+Shape.prototype.create_shapes = function()
 {
     var nodes = [];
-    return nodes;
+    this.shapes.push(nodes);
 }
 
-Shape.prototype.create_indexes = function()
+Shape.prototype.create_indices = function()
 {
-    var indexes = [];
-    return indexes ;
+    var indices = [];
+    this.shape_indices.push(indices);
 }

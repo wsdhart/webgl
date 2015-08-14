@@ -11,7 +11,7 @@ function Sphere(gl , program , h_slices , v_slices)
 Sphere.prototype = new Shape();
 
 // learningwebgl / webkit team method.
-Sphere.prototype.create_shape = function()
+Sphere.prototype.create_shapes = function()
 {
     var nodes = [];
     var horizontals = this.h_slices || 8;
@@ -38,13 +38,13 @@ Sphere.prototype.create_shape = function()
 	    nodes.push(z);
 	}
     }
-    return nodes;
+    this.shapes.push(nodes);
 }
 
-    // learningwebgl / webkit team method.
-Sphere.prototype.create_indexes = function()
+// learningwebgl / webkit team method.
+Sphere.prototype.create_indices = function()
 {
-    var indexes = [];
+    var indices = [];
     var horizontals = this.h_slices || 8;
     var verticals = this.v_slices || 8;
     for(var lattitude = 0; lattitude < horizontals ; lattitude++)
@@ -53,15 +53,15 @@ Sphere.prototype.create_indexes = function()
 	{
 	    var first = (lattitude * (verticals + 1)) + longitude;
 	    var second = first + verticals + 1;
-	    indexes.push(first);
-	    indexes.push(second);
-	    indexes.push(first + 1);
-	    indexes.push(second);
-	    indexes.push(second + 1);
-	    indexes.push(first + 1);
+	    indices.push(first);
+	    indices.push(second);
+	    indices.push(first + 1);
+	    indices.push(second);
+	    indices.push(second + 1);
+	    indices.push(first + 1);
 	}
     }
-    return indexes ;
+    this.shape_indices.push(indices);
 }
 
 Sphere.prototype.name = function()

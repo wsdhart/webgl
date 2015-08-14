@@ -8,7 +8,7 @@ function Cube(gl , program)
 
 Cube.prototype = new Shape();
 
-Cube.prototype.create_shape = function()
+Cube.prototype.create_shapes = function()
 {
     var nodes =
 	[
@@ -24,13 +24,13 @@ Cube.prototype.create_shape = function()
 	    1.0 , 1.0 , (-1.0) ,
 	    1.0 , (-1.0) , (-1.0) ,
 	];
-    return nodes;
+    this.shapes.push(nodes);
 }
 
 // learningwebgl method.
-Cube.prototype.create_indexes = function()
+Cube.prototype.create_indices = function()
 {
-    var indexes =
+    var indices =
 	[
 	    1, 0, 3,
 	    3, 2, 1,
@@ -45,7 +45,7 @@ Cube.prototype.create_indexes = function()
 	    5, 4, 0,
 	    0, 1, 5
 	]
-    return indexes ;
+    this.shape_indices.push(indices);
 }
 
 Cube.prototype.name = function()
