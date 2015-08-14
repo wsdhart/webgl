@@ -66,52 +66,60 @@ function render()
 	shapes[i].render();
 }
 
-function update_primitive(type)
+function update_draw_type(type)
 {
-    if(0 <= type && type <= 6)
-	shapes[current].change_primitive(type);
-
-    render();
+    if(shapes[current])
+    {
+	if(type == 0)
+	    shapes[current].change_draw_type(true , false);
+	else if(type == 1)
+	    shapes[current].change_draw_type(true , true);
+	else if(type == 2)
+	    shapes[current].change_draw_type(false , true);
+	else
+	    return;
+	render();
+    }
 }
 
 function rotate_x(angle)
 {
-    shapes[current].rotate_x(angle * to_radians);
+    shapes[current].x_theta = angle * to_radians;
 
     render();
 }
 
 function rotate_y(angle)
 {
-    shapes[current].rotate_y(angle * to_radians);
+    shapes[current].y_theta = angle * to_radians;
 
     render();
 }
 
 function rotate_z(angle)
 {
-    shapes[current].rotate_z(angle * to_radians);
+    shapes[current].z_theta = angle * to_radians;
 
     render();
 }
 
 function translate_x(pos)
 {
-    shapes[current].translate_x(pos);
+    shapes[current].x_pos = pos;
 
     render();
 }
 
 function translate_y(pos)
 {
-    shapes[current].translate_y(pos);
+    shapes[current].y_pos = pos;
 
     render();
 }
 
 function translate_z(pos)
 {
-    shapes[current].translate_z(pos);
+    shapes[current].z_pos = pos;
 
     render();
 }

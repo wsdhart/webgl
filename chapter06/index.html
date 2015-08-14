@@ -436,16 +436,12 @@
     </div>
     <table>
       <tr>
-	<td align="right">Draw primitive : </td>
+	<td align="right">Draw Type : </td>
 	<td>
-	  <select id="primitive" onchange="update_primitive(this.value)">
-	    <option value="0">POINTS</option>
-	    <option value="1" selected>LINES</option>
-	    <option value="2">LINE_LOOP</option>
-	    <option value="3">LINE_STRIP</option>
-	    <option value="4">TRIANGLES</option>
-	    <option value="5">TRIANGLE_STRIP</option>
-	    <option value="6">TRIANGLE_FAN</option>
+	  <select id="drawtype" onchange="update_draw_type(this.value)">
+	    <option value="0" selected>Wireframe</option>
+	    <option value="1">Wireframe and Fill</option>
+	    <option value="2">Fill</option>
 	  </select>
 	</td>
       </tr>
