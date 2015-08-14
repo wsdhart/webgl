@@ -185,7 +185,7 @@ function rotate_x(angle)
 {
     if(shapes[current])
     {
-	shapes[current].rotate_x(angle * to_radians);
+	shapes[current].x_theta = angle * to_radians;
 	render();
     }
 }
@@ -194,7 +194,7 @@ function rotate_y(angle)
 {
     if(shapes[current])
     {
-	shapes[current].rotate_y(angle * to_radians);
+	shapes[current].y_theta = angle * to_radians;
 	render();
     }
 }
@@ -203,7 +203,7 @@ function rotate_z(angle)
 {
     if(shapes[current])
     {
-	shapes[current].rotate_z(angle * to_radians);
+	shapes[current].z_theta = angle * to_radians;
 	render();
     }
 }
@@ -212,7 +212,7 @@ function translate_x(pos)
 {
     if(shapes[current])
     {
-	shapes[current].translate_x(pos);
+	shapes[current].x_pos = pos;
 	render();
     }
 }
@@ -221,7 +221,7 @@ function translate_y(pos)
 {
     if(shapes[current])
     {
-	shapes[current].translate_y(pos);
+	shapes[current].y_pos = pos;
 	render();
     }
 }
@@ -230,7 +230,7 @@ function translate_z(pos)
 {
     if(shapes[current])
     {
-	shapes[current].translate_z(pos);
+	shapes[current].z_pos = pos;
 	render();
     }
 }
@@ -239,7 +239,7 @@ function scale_x(pos)
 {
     if(shapes[current])
     {
-	shapes[current].scale_x(pos);
+	shapes[current].x_scale = pos;
 	render();
     }
 }
@@ -248,7 +248,7 @@ function scale_y(pos)
 {
     if(shapes[current])
     {
-	shapes[current].scale_y(pos);
+	shapes[current].y_scale = pos;
 	render();
     }
 }

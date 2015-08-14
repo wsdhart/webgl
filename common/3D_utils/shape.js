@@ -151,46 +151,6 @@ Shape.prototype.size = function()
     return count;
 }
 
-Shape.prototype.rotate_x = function(radians)
-{
-    this.x_theta = radians;
-}
-
-Shape.prototype.rotate_y = function(radians)
-{
-    this.y_theta = radians;
-}
-
-Shape.prototype.rotate_z = function(radians)
-{
-    this.z_theta = radians;
-}
-
-Shape.prototype.translate_x = function(pos)
-{
-    this.x_pos = pos;
-}
-
-Shape.prototype.translate_y = function(pos)
-{
-    this.y_pos = pos;
-}
-
-Shape.prototype.translate_z = function(pos)
-{
-    this.z_pos = pos;
-}
-
-Shape.prototype.scale_x = function(scale)
-{
-    this.x_scale = scale;
-}
-
-Shape.prototype.scale_y = function(scale)
-{
-    this.y_scale = scale;
-}
-
 Shape.prototype.change_draw_type = function(wire,solid)
 {
     this.wireframe = wire;
