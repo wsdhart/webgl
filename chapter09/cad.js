@@ -7,6 +7,23 @@ var program;
 var perspective;
 var u_perspective;
 
+var u_ambient;
+var u_diffuse;
+var u_specula;
+
+var ambient = [1.0 , 1.0 , 1.0 , 1.0];
+var diffuse = [1.0 , 1.0 , 1.0 , 1.0];
+var specula = [1.0 , 1.0 , 1.0 , 1.0];
+
+var u_shiney;
+
+var u_light;
+var light = [0 , 1 , -4 , 0];
+
+var light_ambient = [1.0 , 1.0 , 1.0 , 1.0];
+var light_diffuse = [1.0 , 1.0 , 1.0 , 1.0];
+var light_specula = [1.0 , 1.0 , 1.0 , 1.0];
+
 var to_radians = Math.PI / 180.0;
 var to_degrees = 180.0 / Math.PI;
 
@@ -29,7 +46,7 @@ window.onload = function init()
 function setup()
 {
     gl.viewport(0 , 0 , gl.drawingBufferWidth , gl.drawingBufferHeight);
-    gl.clearColor(1.0 , 1.0 , 1.0 , 1.0);
+    gl.clearColor(0.0 , 0.0 , 0.0 , 1.0);
     gl.lineWidth(1.0);
     gl.polygonOffset(0.0 , 0.0);
     gl.enable(gl.DEPTH_TEST);
@@ -56,14 +73,39 @@ function render()
     u_perspective = gl.getUniformLocation(program , "u_perspective");
     gl.uniformMatrix4fv(u_perspective , false , perspective);
 
-    for(var i = 0 ; i < shapes.length ; i++)
-	shapes[i].render();
+    for(var j = 0 ; j < shapes.length ; j++)
+    {
+	var shape = shapes[j];
+
+	for(var i = 0 ; i < 4 ; i++)
+	    ambient[i] = shape.ambient[i] * light_ambient[i];
+	u_ambient = gl.getUniformLocation(program , "u_ambient");
+	gl.uniform4fv(u_ambient , new Float32Array(ambient));
+
+	for(var i = 0 ; i < 4 ; i++)
+	    diffuse[i] = shape.diffuse[i] * light_diffuse[i];
+	u_diffuse = gl.getUniformLocation(program , "u_diffuse");
+	gl.uniform4fv(u_diffuse , new Float32Array(diffuse));
+
+	for(var i = 0 ; i < 4 ; i++)
+	    specula[i] = shape.specula[i] * light_specula[i];
+	u_specula = gl.getUniformLocation(program , "u_specula");
+	gl.uniform4fv(u_specula , new Float32Array(specula));
+
+	u_shiney = gl.getUniformLocation(program , "u_shiney");
+	gl.uniform1f(u_shiney , shape.shiney);
+
+	u_light = gl.getUniformLocation(program , "u_light");
+	gl.uniform4fv(u_light , new Float32Array(light));
+
+	shape.render();
+    }
 }
 
 function create_object(type)
 {
     var element = document.getElementById("create_object");
-    element.selectedIndex = 0;;
+    element.selectedIndex = 0;
 
     var shape;
     if(type == 0)
@@ -72,10 +114,6 @@ function create_object(type)
 	shape = new Cylinder(gl , program);
     else if(type == 2)
 	shape = new Sphere(gl , program , 15 , 15);
-    else if(type == 3)
-	shape = new Cube(gl , program);
-    else if(type == 4)
-	shape = new Tetrahedron(gl , program);
     else return ;
 
     shape.create();
@@ -122,11 +160,17 @@ function select_object(item)
     input = document.getElementById("translate_z");
     input.value = current_shape.z_pos;
 
-    input = document.getElementById("fill_color");
-    input.value = get_color(current_shape.fill_color);
+    input = document.getElementById("ambient_color");
+    input.value = get_color(current_shape.ambient);
 
-    input = document.getElementById("trim_color");
-    input.value = get_color(current_shape.trim_color);
+    input = document.getElementById("diffuse_color");
+    input.value = get_color(current_shape.diffuse);
+
+    input = document.getElementById("specula_color");
+    input.value = get_color(current_shape.specula);
+
+    input = document.getElementById("shininess");
+    input.value = get_color(current_shape.shiney);
 
     input = document.getElementById("scale_x");
     input.value = current_shape.x_scale;
@@ -253,20 +297,38 @@ function scale_y(pos)
     }
 }
 
-function set_fillcolor(color)
+function shininess(pos)
 {
     if(shapes[current])
     {
-	shapes[current].fill_color = set_color(color);
+	shapes[current].shiney = pos;
 	render();
     }
 }
 
-function set_trimcolor(color)
+function set_ambientcolor(color)
 {
     if(shapes[current])
     {
-	shapes[current].trim_color = set_color(color);
+	shapes[current].ambient = set_color(color);
+	render();
+    }
+}
+
+function set_diffusecolor(color)
+{
+    if(shapes[current])
+    {
+	shapes[current].diffuse = set_color(color);
+	render();
+    }
+}
+
+function set_speculacolor(color)
+{
+    if(shapes[current])
+    {
+	shapes[current].specula = set_color(color);
 	render();
     }
 }
@@ -276,5 +338,41 @@ function set_bgcolor(color)
     var bg_color = set_color(color);
     gl.clearColor(bg_color[0] , bg_color[1] , bg_color[2] , bg_color[3]);
 
+    render();
+}
+
+function light_x(pos)
+{
+    light[0] = pos;
+    render();
+}
+
+function light_y(pos)
+{
+    light[1] = pos;
+    render();
+}
+
+function light_z(pos)
+{
+    light[2] = pos;
+    render();
+}
+
+function set_ambientlightcolor(color)
+{
+    light_ambient = set_color(color);
+    render();
+}
+
+function set_diffuselightcolor(color)
+{
+    light_diffuse = set_color(color);
+    render();
+}
+
+function set_speculalightcolor(color)
+{
+    light_specula = set_color(color);
     render();
 }

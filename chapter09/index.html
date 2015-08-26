@@ -5,26 +5,47 @@
     <script type="text/javascript" src="../common/shader_utils.js"></script>
     <script type="text/javascript" src="../common/gl-matrix.js"></script>
     <script type="text/javascript" src="../common/color_utils.js"></script>
-    <script type="text/javascript" src="../common/3D_utils/shape.js"></script>
-    <script type="text/javascript" src="../common/3D_utils/sphere.js"></script>
-    <script type="text/javascript" src="../common/3D_utils/cube.js"></script>
-    <script type="text/javascript" src="../common/3D_utils/cylinder.js">
-    </script>
-    <script type="text/javascript" src="../common/3D_utils/cone.js"></script>
-    <script type="text/javascript" src="../common/3D_utils/tetrahedron.js">
+    <script type="text/javascript" src="shape.js"></script>
+    <script type="text/javascript" src="sphere.js"></script>
+    <script type="text/javascript" src="cone.js"></script>
+    <script type="text/javascript" src="cylinder.js"></script>
     </script>
     <script type="text/javascript" src="cad.js"></script>
 
     <script id="vertex-shader" type="x-shader/x-vertex">
       attribute vec4 v_position;
+      attribute vec4 v_normal;
+
       uniform mat4 u_pos_matrix;
       uniform mat4 u_perspective;
-      uniform vec4 u_color;
+
+      uniform vec4 u_light;
+      uniform vec4 u_ambient;
+      uniform vec4 u_diffuse;
+      uniform vec4 u_specula;
+      uniform float u_shiney;
+
       varying vec4 f_color;
+
       void main()
       {
 	gl_Position = u_perspective * u_pos_matrix * v_position;
-	f_color = u_color;
+
+	vec3 pos = (u_pos_matrix * v_position).xyz;
+	vec3 L = normalize(u_light.xyz - pos);
+	vec3 E = -normalize(pos);
+	vec3 H = normalize(L + E);
+	vec3 N = normalize((u_pos_matrix * v_normal).xyz);
+
+	vec4 ambient = u_ambient;
+	float Kd = max(dot(L , N) , 0.0);
+	vec4 diffuse = Kd * u_diffuse;
+	float Ks = pow(max(dot(L , N) , 0.0), u_shiney);
+	vec4 specula = Ks * u_specula;
+	if(Kd < 0.0){ specula = vec4(0 , 0 , 0 , 1); }
+
+	f_color = ambient + diffuse + specula;
+	f_color.a = 1.0;
       }
     </script>
     <script id="fragment-shader" type="x-shader/x-fragment">
@@ -56,20 +77,26 @@
 	<td align="right">Draw Type : </td>
 	<td>
 	  <select id="drawtype" onchange="update_draw_type(this.value)">
-	    <option value="0" selected>Wireframe</option>
-	    <option value="1">Wireframe and Fill</option>
-	    <option value="2">Fill</option>
+	    <option value="0">Wireframe</option>
+	    <option value="2" selected>Fill</option>
 	  </select>
 	</td>
-	<td align="right">Fill Color : </td>
+      </tr>
+      <tr>
+	<td align="right">Ambient Color : </td>
 	<td>
-	  <input type="color" id="fill_color"
-		 onchange="set_fillcolor(this.value)" value="#ffffff"/>
+	  <input type="color" id="ambient_color"
+		 onchange="set_ambientcolor(this.value)" value="#ffffff"/>
 	</td>
-	<td align="right">Trim Color : </td>
+	<td align="right">Diffuse Color : </td>
 	<td>
-	  <input type="color" id="trim_color"
-		 onchange="set_trimcolor(this.value)" value="#000000"/>
+	  <input type="color" id="diffuse_color"
+		 onchange="set_diffusecolor(this.value)" value="#ffffff"/>
+	</td>
+	<td align="right">Specular Color : </td>
+	<td>
+	  <input type="color" id="specula_color"
+		 onchange="set_speculacolor(this.value)" value="#ffffff"/>
 	</td>
       </tr>
       <tr>
@@ -133,10 +160,12 @@
 		 onchange="translate_z(this.value)"
 		 oninput="translate_z(this.value)"/>
 	</td>
-	<td>&nbsp;</td>
+	<td align="right">Shininess : </td>
 	<td>
-	  <input type="button" id="delete_object" value="Delete Object"
-		 onclick="delete_object()"/>
+	  <input type="range" id="shininess"
+		 min="1" max="200" value="20" step="1"
+		 onchange="shininess(this.value)"
+		 oninput="shininess(this.value)"/>
 	</td>
       </tr>
     </table>
@@ -150,7 +179,7 @@
 	<td align="right">Background Color : </td>
 	<td>
 	  <input type="color" id="bg_color"
-		 onchange="set_bgcolor(this.value)" value="#ffffff"/>
+		 onchange="set_bgcolor(this.value)" value="#000000"/>
 	</td>
 	<td align="right">Create Object : </td>
 	<td>
@@ -159,10 +188,57 @@
 	    <option value="0">Cone</option>
 	    <option value="1">Cylinder</option>
 	    <option value="2">Sphere</option>
-	    <option value="3">Cube</option>
-	    <option value="4">Tetrahedron</option>
 	  </select>
 	</td>
+	 <td>&nbsp;</td>
+	<td>
+	  <input type="button" id="delete_object" value="Delete Object"
+		 onclick="delete_object()"/>
+	</td>
+      </tr>
+    </table>
+    <br/>
+    <table bgcolor="#BBBBBB">
+      <tr>
+	<td align="right">Light X : </td>
+	<td>
+	  <input type="range" id="light_x"
+		 min="-16" max="16" value="0" step="0.1"
+		 onchange="light_x(this.value)"
+		 oninput="light_x(this.value)"/>
+	</td>
+	<td align="right">Light Y : </td>
+	<td>
+	  <input type="range" id="light_y"
+		 min="-16" max="16" value="1" step="0.1"
+		 onchange="light_y(this.value)"
+		 oninput="light_y(this.value)"/>
+	</td>
+	<td align="right">Light Z : </td>
+	<td>
+	  <input type="range" id="light_z"
+		 min="-90" max="3" value="-4" step="0.1"
+		 onchange="light_z(this.value)"
+		 oninput="light_z(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td align="right">Ambient Color : </td>
+	<td>
+	  <input type="color" id="ambient_light_color"
+		 onchange="set_ambientlightcolor(this.value)" value="#ffffff"/>
+	</td>
+	<td align="right">Diffuse Color : </td>
+	<td>
+	  <input type="color" id="diffuse_color"
+		 onchange="set_diffuselightcolor(this.value)" value="#ffffff"/>
+	</td>
+	<td align="right">Specular Color : </td>
+	<td>
+	  <input type="color" id="specula_color"
+		 onchange="set_speculalightcolor(this.value)" value="#ffffff"/>
+	</td>
+      </tr>
     </table>
   </body>
 </html>
