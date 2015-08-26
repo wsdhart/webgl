@@ -63,7 +63,7 @@ function render()
 function create_object(type)
 {
     var element = document.getElementById("create_object");
-    element.selectedIndex = 0;;
+    element.selectedIndex = 0;
 
     var shape;
     if(type == 0)
