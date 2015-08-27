@@ -170,7 +170,7 @@ function select_object(item)
     input.value = get_color(current_shape.specula);
 
     input = document.getElementById("shininess");
-    input.value = get_color(current_shape.shiney);
+    input.value = current_shape.shiney;
 
     input = document.getElementById("scale_x");
     input.value = current_shape.x_scale;
