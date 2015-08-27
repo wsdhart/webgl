@@ -35,12 +35,12 @@
 	vec3 L = normalize(u_light.xyz - pos);
 	vec3 E = -normalize(pos);
 	vec3 H = normalize(L + E);
-	vec3 N = normalize((u_pos_matrix * v_normal).xyz);
+	vec3 N = normalize(mat3(u_pos_matrix) * v_normal.xyz);
 
 	vec4 ambient = u_ambient;
 	float Kd = max(dot(L , N) , 0.0);
 	vec4 diffuse = Kd * u_diffuse;
-	float Ks = pow(max(dot(L , N) , 0.0), u_shiney);
+	float Ks = pow(max(dot(N , H) , 0.0), u_shiney);
 	vec4 specula = Ks * u_specula;
 	if(Kd < 0.0){ specula = vec4(0 , 0 , 0 , 1); }
 
