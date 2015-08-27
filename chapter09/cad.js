@@ -18,7 +18,7 @@ var specula = [1.0 , 1.0 , 1.0 , 1.0];
 var u_shiney;
 
 var u_light;
-var light = [0 , 1 , -4 , 0];
+var light = [0 , 2 , -3 , 0];
 
 var light_ambient = [1.0 , 1.0 , 1.0 , 1.0];
 var light_diffuse = [1.0 , 1.0 , 1.0 , 1.0];
