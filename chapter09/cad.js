@@ -17,8 +17,11 @@ var specula = [1.0 , 1.0 , 1.0 , 1.0];
 
 var u_shiney;
 
-var u_light;
-var light = [0 , 2 , -3 , 0];
+var u_specula_light;
+var specula_light = [0 , 2 , -3 , 0];
+
+var u_diffuse_light;
+var diffuse_light = [0 , 2 , -3 , 0];
 
 var light_ambient = [1.0 , 1.0 , 1.0 , 1.0];
 var light_diffuse = [1.0 , 1.0 , 1.0 , 1.0];
@@ -64,6 +67,8 @@ function setup()
 	0.001 ,
 	100.0
     );
+
+    update_object_list();
 }
 
 function render()
@@ -95,8 +100,11 @@ function render()
 	u_shiney = gl.getUniformLocation(program , "u_shiney");
 	gl.uniform1f(u_shiney , shape.shiney);
 
-	u_light = gl.getUniformLocation(program , "u_light");
-	gl.uniform4fv(u_light , new Float32Array(light));
+	u_specula_light = gl.getUniformLocation(program , "u_specula_light");
+	gl.uniform4fv(u_specula_light , new Float32Array(specula_light));
+
+	u_diffuse_light = gl.getUniformLocation(program , "u_diffuse_light");
+	gl.uniform4fv(u_diffuse_light , new Float32Array(diffuse_light));
 
 	shape.render();
     }
@@ -192,6 +200,13 @@ function update_object_list()
 	option.text = shapes[i].name();
 	list.add(option , i);
     }
+
+    var panel = document.getElementById("object_panel");
+
+    if(shapes.length == 0)
+	panel.style.display = 'none';
+    else
+	panel.style.display = 'inline';
 }
 
 function delete_object()
@@ -341,37 +356,55 @@ function set_bgcolor(color)
     render();
 }
 
-function light_x(pos)
+function specula_x(pos)
 {
-    light[0] = pos;
+    specula_light[0] = pos;
     render();
 }
 
-function light_y(pos)
+function specula_y(pos)
 {
-    light[1] = pos;
+    specula_light[1] = pos;
     render();
 }
 
-function light_z(pos)
+function specula_z(pos)
 {
-    light[2] = pos;
+    specula_light[2] = pos;
     render();
 }
 
-function set_ambientlightcolor(color)
+function diffuse_x(pos)
+{
+    diffuse_light[0] = pos;
+    render();
+}
+
+function diffuse_y(pos)
+{
+    diffuse_light[1] = pos;
+    render();
+}
+
+function diffuse_z(pos)
+{
+    diffuse_light[2] = pos;
+    render();
+}
+
+function set_ambientlight(color)
 {
     light_ambient = set_color(color);
     render();
 }
 
-function set_diffuselightcolor(color)
+function set_diffuselight(color)
 {
     light_diffuse = set_color(color);
     render();
 }
 
-function set_speculalightcolor(color)
+function set_speculalight(color)
 {
     light_specula = set_color(color);
     render();
