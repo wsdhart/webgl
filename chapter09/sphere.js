@@ -14,7 +14,6 @@ Sphere.prototype = new Shape();
 Sphere.prototype.create_shapes = function()
 {
     var nodes = [];
-    var normals = [];
     var horizontals = this.h_slices || 8;
     var horizontal_slice = Math.PI / horizontals;
     var verticals = this.v_slices || 8;
@@ -35,15 +34,11 @@ Sphere.prototype.create_shapes = function()
 	    var y = cos_theta;
 	    var z = sin_phi * sin_theta;
 	    nodes.push(x);
-	    normals.push(x);
 	    nodes.push(y);
-	    normals.push(y);
 	    nodes.push(z);
-	    normals.push(z);
 	}
     }
     this.shapes.push(nodes);
-    this.shape_normals.push(normals);
 }
 
 // learningwebgl / webkit team method.
@@ -67,6 +62,17 @@ Sphere.prototype.create_indices = function()
 	}
     }
     this.shape_indices.push(indices);
+}
+
+Sphere.prototype.create_normals = function()
+{
+    var points = this.shapes[0];
+    var normals = [];
+
+    for(var point in points)
+	normals.push(points[point]);
+
+    this.shape_normals.push(normals);
 }
 
 Sphere.prototype.name = function()

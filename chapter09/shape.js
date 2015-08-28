@@ -50,6 +50,7 @@ Shape.prototype.create = function()
 
     this.create_shapes();
     this.create_indices();
+    this.create_normals();
 
     this.pos_matrix = mat4.create();
     this.pos_matrix = mat4.identity(this.pos_matrix);
@@ -177,4 +178,10 @@ Shape.prototype.create_indices = function()
 {
     var indices = [];
     this.shape_indices.push(indices);
+}
+
+Shape.prototype.create_normals = function()
+{
+    var indices = [];
+    this.shape_normals.push(normals);
 }

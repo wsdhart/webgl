@@ -13,7 +13,6 @@ Cone.prototype = new Shape();
 Cone.prototype.create_shapes = function()
 {
     var nodes = [];
-    var normals = [];
     var horizontals = this.h_slices || 2;
     var horizontal_slice = 2 / horizontals;
     var verticals = this.v_slices || 24;
@@ -31,49 +30,34 @@ Cone.prototype.create_shapes = function()
 	    var y = pos ;
 	    var z = Math.sin(theta) * width;
 	    nodes.push(x);
-	    normals.push(x);
 	    nodes.push(y);
-	    normals.push(y);
 	    nodes.push(z);
-	    normals.push(z);
 	}
     }
 
     this.shapes.push(nodes);
-    this.shape_normals.push(normals);
     nodes = [];
-    normals = [];
 
     var pos = Math.PI / 2;
     var angle = (2 * Math.PI) / verticals;
 
     nodes.push(0.0);
-    normals.push(0.0);
     nodes.push(-1.0);
-    normals.push(-1.0);
     nodes.push(0.0);
-    normals.push(0.0);
 
     for(var i = 0 ; i < (verticals * 3) ; i+=3)
     {
 	nodes.push(Math.cos(pos));
-	normals.push(Math.cos(pos));
 	nodes.push(-1.0);
-	normals.push(-1.0);
 	nodes.push(Math.sin(pos));
-	normals.push(Math.sin(pos));
 	pos -= angle;
     }
 
     nodes.push(Math.cos(pos));
-    normals.push(Math.cos(pos));
     nodes.push(-1.0);
-    normals.push(-1.0);
     nodes.push(Math.sin(pos));
-    normals.push(Math.sin(pos));
 
     this.shapes.push(nodes);
-    this.shape_normals.push(normals);
 }
 
 Cone.prototype.create_indices = function()
@@ -105,6 +89,21 @@ Cone.prototype.create_indices = function()
 	indices.push(i + 2);
     }
     this.shape_indices.push(indices);
+}
+
+Cone.prototype.create_normals = function()
+{
+    var normals;
+    for(var j in this.shapes)
+    {
+	var points = this.shapes[j];
+	normals = [];
+
+	for(var i in points)
+	    normals.push(points[i]);
+
+	this.shape_normals.push(normals);
+    }
 }
 
 Cone.prototype.name = function()
