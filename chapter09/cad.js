@@ -122,6 +122,10 @@ function create_object(type)
 	shape = new Cylinder(gl , program);
     else if(type == 2)
 	shape = new Sphere(gl , program , 15 , 15);
+    else if(type == 3)
+	shape = new Cube(gl , program);
+    else if(type == 4)
+	shape = new Tetrahedron(gl , program);
     else return ;
 
     shape.create();
