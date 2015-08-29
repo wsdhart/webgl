@@ -1,0 +1,290 @@
+<html>
+  <head>
+    <title>Appendix IV</title>
+    <script type="text/javascript" src="../common/webgl-utils.js"></script>
+    <script type="text/javascript" src="../common/shader_utils.js"></script>
+    <script type="text/javascript" src="../common/gl-matrix.js"></script>
+    <script type="text/javascript" src="../common/color_utils.js"></script>
+    <script type="text/javascript" src="shape.js"></script>
+    <script type="text/javascript" src="sphere.js"></script>
+    <script type="text/javascript" src="cone.js"></script>
+    <script type="text/javascript" src="cylinder.js"></script>
+    <script type="text/javascript" src="cube.js"></script>
+    <script type="text/javascript" src="tetrahedron.js"></script>
+    <script type="text/javascript" src="cad.js"></script>
+
+    <script id="vertex-shader" type="x-shader/x-vertex">
+      attribute vec4 v_position;
+      attribute vec4 v_normal;
+
+      uniform mat4 u_pos_matrix;
+      uniform mat4 u_perspective;
+
+      uniform vec4 u_specula_light;
+      uniform vec4 u_diffuse_light;
+      uniform vec4 u_ambient;
+      uniform vec4 u_diffuse;
+      uniform vec4 u_specula;
+      uniform float u_shiney;
+
+      varying vec4 f_color;
+
+      void main()
+      {
+	gl_Position = u_perspective * u_pos_matrix * v_position;
+
+	vec3 pos = (u_pos_matrix * v_position).xyz;
+
+	vec3 E = -normalize(pos);
+	vec3 N = normalize(mat3(u_pos_matrix) * v_normal.xyz);
+
+	vec4 ambient = u_ambient;
+
+	vec3 L;
+	if(u_diffuse_light.z == 0.0)
+		L = normalize(u_diffuse_light.xyz);
+	else
+		L = normalize(u_diffuse_light.xyz - pos);
+
+	float Kd = max(dot(L , N) , 0.0);
+	vec4 diffuse = Kd * u_diffuse;
+
+	if(u_specula_light.z == 0.0)
+		L = normalize(u_specula_light.xyz);
+	else
+		L = normalize(u_specula_light.xyz - pos);
+
+	vec3 H = normalize(L + E);
+	float Ks = pow(max(dot(N , H) , 0.0), u_shiney);
+	vec4 specula = Ks * u_specula;
+	if(Kd <= 0.0){ specula = vec4(0.0 , 0.0 , 0.0 , 1.0); }
+
+	f_color = ambient + diffuse + specula;
+	f_color.a = 1.0;
+      }
+    </script>
+    <script id="fragment-shader" type="x-shader/x-fragment">
+      #ifdef GL_FRAGMENT_SHADER_PRECISION_HIGH
+	precision highp float;
+      #else
+	precision mediump float;
+      #endif
+
+      varying vec4 f_color;
+      void main()
+      {
+	gl_FragColor = f_color;
+      }
+    </script>
+
+    <noscript>JavaScript is required to view this page's content.</noscript>
+  </head>
+  <body>
+    <h1>Interactive Computer Graphics with WebGL</h1>
+    <h2>Assignment 4: Adding Lighting</h2>
+    <div align="center">
+      <canvas id="webgl-canvas" width="768" height="384">
+	<img src="appendix_iv.png"/><br/>
+	<b>HTML5 is required to view this page's content.</b>
+      </canvas>
+    </div>
+    <br/>
+    <table bgcolor="#DDDDDD" cellpadding="3" id="objects_panel">
+      <tr>
+	<td align="right">Create Object : </td>
+	<td>
+	  <select id="create_object" onchange="create_object(this.value)">
+	    <option selected>---</option>
+	    <option value="0">Cone</option>
+	    <option value="1">Cylinder</option>
+	    <option value="2">Sphere</option>
+	    <option value="3">Cube</option>
+	    <option value="4">Tetrahedron</option>
+	  </select>
+	</td>
+	<td align="right">Select Object : </td>
+	<td>
+	  <select id="select_object" onchange="select_object(this.value)">
+	  </select>
+	</td>
+	<td>&nbsp;</td>
+	<td>
+	  <input type="button" id="delete_object" value="Delete Object"
+		 onclick="delete_object()"/>
+	</td>
+	<td align="right">Background Color : </td>
+	<td>
+	  <input type="color" id="bg_color"
+		 onchange="set_bgcolor(this.value)" value="#000000"/>
+	</td>
+      </tr>
+    </table>
+    <table cellpadding="4" id="object_panel">
+      <tr>
+	<td align="right">Ambient Color : </td>
+	<td>
+	  <input type="color" id="ambient_color"
+		 onchange="set_ambientcolor(this.value)" value="#ffffff"/>
+	</td>
+	<td align="right">Rotate X : </td>
+	<td>
+	  <input type="range" id="rotate_x"
+		 min="-180" max="180" value="0" step="1"
+		 onchange="rotate_x(this.value)"
+		 oninput="rotate_x(this.value)"/>
+	</td>
+	<td align="right">Rotate Y : </td>
+	<td>
+	  <input type="range" id="rotate_y"
+		 min="-180" max="180" value="0" step="1"
+		 onchange="rotate_y(this.value)"
+		 oninput="rotate_y(this.value)"/>
+	</td>
+	<td align="right">Rotate Z : </td>
+	<td>
+	  <input type="range" id="rotate_z"
+		 min="-180" max="180" value="0" step="1"
+		 onchange="rotate_z(this.value)"
+		 oninput="rotate_z(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td align="right">Diffuse Color : </td>
+	<td>
+	  <input type="color" id="diffuse_color"
+		 onchange="set_diffusecolor(this.value)" value="#ffffff"/>
+	</td>
+	<td align="right">Translate X : </td>
+	<td>
+	  <input type="range" id="translate_x"
+		 min="-16" max="16" value="0" step="0.1"
+		 onchange="translate_x(this.value)"
+		 oninput="translate_x(this.value)"/>
+	</td>
+	<td align="right">Translate Y : </td>
+	<td>
+	  <input type="range" id="translate_y"
+		 min="-16" max="16" value="0" step="0.1"
+		 onchange="translate_y(this.value)"
+		 oninput="translate_y(this.value)"/>
+	</td>
+	<td align="right">Translate Z : </td>
+	<td>
+	  <input type="range" id="translate_z"
+		 min="-90" max="3" value="0" step="0.1"
+		 onchange="translate_z(this.value)"
+		 oninput="translate_z(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td align="right">Specular Color : </td>
+	<td>
+	  <input type="color" id="specula_color"
+		 onchange="set_speculacolor(this.value)" value="#ffffff"/>
+	</td>
+	<td align="right">Scale Height : </td>
+	<td>
+	  <input type="range" id="scale_y"
+		 min="0.1" max="4.0" value="1.0" step="0.1"
+		 onchange="scale_y(this.value)"
+		 oninput="scale_y(this.value)"/>
+	</td>
+	<td align="right">Scale Width : </td>
+	<td>
+	  <input type="range" id="scale_x"
+		 min="0.1" max="4.0" value="1.0" step="0.1"
+		 onchange="scale_x(this.value)"
+		 oninput="scale_x(this.value)"/>
+	</td>
+	<td align="right">Shininess : </td>
+	<td>
+	  <input type="range" id="shininess"
+		 min="1" max="200" value="20" step="1"
+		 onchange="shininess(this.value)"
+		 oninput="shininess(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td align="right">Draw Type : </td>
+	<td>
+	  <select id="drawtype" onchange="update_draw_type(this.value)">
+	    <option value="0">Wireframe</option>
+	    <option value="2" selected>Fill</option>
+	  </select>
+	</td>
+      </tr>
+    </table>
+    <br/>
+    <table bgcolor="#BBBBBB" cellpadding="4" id="light_panel">
+      <tr>
+	<td align="right">Ambient Light : </td>
+	<td>
+	  <input type="color" id="ambient_light"
+		 onchange="set_ambientlight(this.value)" value="#ffffff"/>
+	</td>
+      </tr>
+      <tr>
+	<td align="right">Diffuse Light : </td>
+	<td>
+	  <input type="color" id="diffuse_light"
+		 onchange="set_diffuselight(this.value)" value="#ffffff"/>
+	</td>
+	<td align="right">Diffuse X : </td>
+	<td>
+	  <input type="range" id="diffuse_x"
+		 min="-16" max="16" value="0" step="0.1"
+		 onchange="diffuse_x(this.value)"
+		 oninput="diffuse_x(this.value)"/>
+	</td>
+	<td align="right">Diffuse Y : </td>
+	<td>
+	  <input type="range" id="diffuse_y"
+		 min="-16" max="16" value="1" step="0.1"
+		 onchange="diffuse_y(this.value)"
+		 oninput="diffuse_y(this.value)"/>
+	</td>
+	<td align="right">Diffuse Z : </td>
+	<td>
+	  <input type="range" id="diffuse_z"
+		 min="-90" max="3" value="-3" step="0.1"
+		 onchange="diffuse_z(this.value)"
+		 oninput="diffuse_z(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td align="right">Specular Light : </td>
+	<td>
+	  <input type="color" id="specula_light"
+		 onchange="set_speculalight(this.value)" value="#ffffff"/>
+	</td>
+	<td align="right">Specular X : </td>
+	<td>
+	  <input type="range" id="specula_x"
+		 min="-16" max="16" value="0" step="0.1"
+		 onchange="specula_x(this.value)"
+		 oninput="specula_x(this.value)"/>
+	</td>
+	<td align="right">Specular Y : </td>
+	<td>
+	  <input type="range" id="specula_y"
+		 min="-16" max="16" value="1" step="0.1"
+		 onchange="specula_y(this.value)"
+		 oninput="specula_y(this.value)"/>
+	</td>
+	<td align="right">Specular Z : </td>
+	<td>
+	  <input type="range" id="ambient_z"
+		 min="-90" max="3" value="-3" step="0.1"
+		 onchange="specula_z(this.value)"
+		 oninput="specula_z(this.value)"/>
+	</td>
+      </tr>
+    </table>
+  </body>
+</html>
