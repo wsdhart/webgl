@@ -13,42 +13,30 @@ Cylinder.prototype = new Shape();
 Cylinder.prototype.create_shapes = function()
 {
     var nodes = [];
-    var normals = [];
     var verticals = this.v_slices || 24;
 
     var pos = Math.PI / 2;
     var angle = (2 * Math.PI) / verticals;
 
     nodes.push(0.0);
-    normals.push(0.0);
     nodes.push(1.0);
-    normals.push(1.0);
     nodes.push(0.0);
-    normals.push(0.0);
 
     for(var i = 0 ; i < (verticals * 3) ; i+=3)
     {
 	nodes.push(Math.cos(pos));
-	normals.push(Math.cos(pos));
 	nodes.push(1.0);
-	normals.push(1.0);
 	nodes.push(Math.sin(pos));
-	normals.push(Math.sin(pos));
 	pos -= angle;
     }
 
     nodes.push(Math.cos(pos));
-    normals.push(Math.cos(pos));
     nodes.push(1.0);
-    normals.push(1.0);
     nodes.push(Math.sin(pos));
-    normals.push(Math.sin(pos));
 
     this.shapes.push(nodes);
-    this.shape_normals.push(normals);
 
     nodes = [];
-    normals = [];
     var horizontals = this.h_slices || 2;
     var horizontal_slice = 2 / horizontals;
     var vertical_slice = 2 * Math.PI / verticals;
@@ -63,45 +51,30 @@ Cylinder.prototype.create_shapes = function()
 	    var y = pos ;
 	    var z = Math.sin(theta);
 	    nodes.push(x);
-	    normals.push(x);
 	    nodes.push(y);
-	    normals.push(y);
 	    nodes.push(z);
-	    normals.push(z);
 	}
     }
     this.shapes.push(nodes);
-    this.shape_normals.push(normals);
 
     nodes = [];
-    normals = [];
     nodes.push(0.0);
-    normals.push(0.0);
     nodes.push(-1.0);
-    normals.push(-1.0);
     nodes.push(0.0);
-    normals.push(0.0);
 
     for(var i = 0 ; i < (verticals * 3) ; i+=3)
     {
 	nodes.push(Math.cos(pos));
-	normals.push(Math.cos(pos));
 	nodes.push(-1.0);
-	normals.push(-1.0);
 	nodes.push(Math.sin(pos));
-	normals.push(Math.sin(pos));
 	pos -= angle;
     }
 
     nodes.push(Math.cos(pos));
-    normals.push(Math.cos(pos));
     nodes.push(-1.0);
-    normals.push(-1.0);
     nodes.push(Math.sin(pos));
-    normals.push(Math.sin(pos));
 
     this.shapes.push(nodes);
-    this.shape_normals.push(normals);
 }
 
 Cylinder.prototype.create_indices = function()
@@ -151,45 +124,16 @@ Cylinder.prototype.create_normals = function()
     for(var j in this.shapes)
     {
 	var points = this.shapes[j];
-	var indices = this.shape_indices[j];
 	normals = [];
 
-	for(var i = 0 ; i < indices.length ; i += 3)
+	for(var i in points)
 	{
-	    var k = indices[i];
-	    var x1 = points[k];
-	    var y1 = points[k + 1];
-	    var z1 = points[k + 2];
-
-	    var m = indices[i + 1];
-	    var x2 = points[m];
-	    var y2 = points[m + 1];
-	    var z2 = points[m + 2];
-
-	    var n = indices[i + 2];
-	    var x3 = points[n];
-	    var y3 = points[n + 1];
-	    var z3 = points[n + 2];
-
-	    var t1x = x2 - x1;
-	    var t1y = y2 - y1;
-	    var t1z = z2 - z1;
-
-	    var t2x = x3 - x1;
-	    var t2y = y3 - y1;
-	    var t2z = z3 - z1;
-
-	    var cx = t1y * t2z - t1z * t2y;
-	    var cy = t1z * t2x - t1x * t2z;
-	    var cz = t1x * t2y - t1y * t2x;
-
-	    cx /= 3;
-	    cy /= 3;
-	    cz /= 3;
-
-	    normals.push(cx);
-	    normals.push(cy);
-	    normals.push(cz);
+	    if(j == 0)
+		normals.push(i % 3 == 1 ? 1 : 0);
+	    else if(j == 1)
+		normals.push(points[i]);
+	    else
+		normals.push(i % 3 == 1 ? -1 : 0);
 	}
 	this.shape_normals.push(normals);
     }

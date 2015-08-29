@@ -100,7 +100,12 @@ Cone.prototype.create_normals = function()
 	normals = [];
 
 	for(var i in points)
-	    normals.push(points[i]);
+	{
+	    if(j == 0)
+		normals.push(points[i]);
+	    else
+		normals.push(i % 3 == 1 ? -1 : 0);
+	}
 
 	this.shape_normals.push(normals);
     }
