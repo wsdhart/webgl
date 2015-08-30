@@ -38,7 +38,7 @@
 	vec3 E = -normalize(pos);
 	vec3 N = normalize(mat3(u_pos_matrix) * v_normal.xyz);
 
-	vec4 ambient = u_ambient;
+	vec4 ambient = u_ambient * (1.0 / (gl_Position.z / 4.0));
 
 	vec3 L;
 	if(u_diffuse_light.z == 0.0)
@@ -46,17 +46,25 @@
 	else
 		L = normalize(u_diffuse_light.xyz - pos);
 
+      vec3 diff = gl_Position.xyz - L;
+      float distance = 4.0 /
+      (diff.x * diff.x + diff.y * diff.y + diff.z * diff.z);
+
 	float Kd = max(dot(L , N) , 0.0);
-	vec4 diffuse = Kd * u_diffuse;
+	vec4 diffuse = Kd * u_diffuse * distance;
 
 	if(u_specula_light.z == 0.0)
 		L = normalize(u_specula_light.xyz);
 	else
 		L = normalize(u_specula_light.xyz - pos);
 
+      diff = gl_Position.xyz - L;
+      distance = 4.0 /
+      (diff.x * diff.x + diff.y * diff.y + diff.z * diff.z);
+
 	vec3 H = normalize(L + E);
 	float Ks = pow(max(dot(N , H) , 0.0), u_shiney);
-	vec4 specula = Ks * u_specula;
+	vec4 specula = Ks * u_specula * distance;
 	if(Kd <= 0.0){ specula = vec4(0.0 , 0.0 , 0.0 , 1.0); }
 
 	f_color = ambient + diffuse + specula;
@@ -170,7 +178,7 @@
 	<td align="right">Translate Z : </td>
 	<td>
 	  <input type="range" id="translate_z"
-		 min="-90" max="3" value="0" step="0.1"
+		 min="-50" max="2" value="0" step="0.1"
 		 onchange="translate_z(this.value)"
 		 oninput="translate_z(this.value)"/>
 	</td>

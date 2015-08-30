@@ -65,7 +65,7 @@ function setup()
 	45.0 ,
 	gl.drawingBufferWidth / gl.drawingBufferHeight ,
 	0.001 ,
-	100.0
+	50.0
     );
 
     update_object_list();
