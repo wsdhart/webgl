@@ -158,34 +158,6 @@
 	  <input type="color" id="ambient_color"
 		 onchange="set_ambientcolor(this.value)" value="#ffffff"/>
 	</td>
-	<td align="right">Rotate X : </td>
-	<td>
-	  <input type="range" id="rotate_x"
-		 min="-180" max="180" value="0" step="1"
-		 onchange="rotate_x(this.value)"
-		 oninput="rotate_x(this.value)"/>
-	</td>
-	<td align="right">Rotate Y : </td>
-	<td>
-	  <input type="range" id="rotate_y"
-		 min="-180" max="180" value="0" step="1"
-		 onchange="rotate_y(this.value)"
-		 oninput="rotate_y(this.value)"/>
-	</td>
-	<td align="right">Rotate Z : </td>
-	<td>
-	  <input type="range" id="rotate_z"
-		 min="-180" max="180" value="0" step="1"
-		 onchange="rotate_z(this.value)"
-		 oninput="rotate_z(this.value)"/>
-	</td>
-      </tr>
-      <tr>
-	<td align="right">Diffuse Color : </td>
-	<td>
-	  <input type="color" id="diffuse_color"
-		 onchange="set_diffusecolor(this.value)" value="#ffffff"/>
-	</td>
 	<td align="right">Translate X : </td>
 	<td>
 	  <input type="range" id="translate_x"
@@ -193,26 +165,12 @@
 		 onchange="translate_x(this.value)"
 		 oninput="translate_x(this.value)"/>
 	</td>
-	<td align="right">Translate Y : </td>
+	<td align="right">Rotate X : </td>
 	<td>
-	  <input type="range" id="translate_y"
-		 min="-16" max="16" value="0" step="0.1"
-		 onchange="translate_y(this.value)"
-		 oninput="translate_y(this.value)"/>
-	</td>
-	<td align="right">Translate Z : </td>
-	<td>
-	  <input type="range" id="translate_z"
-		 min="-50" max="2" value="0" step="0.1"
-		 onchange="translate_z(this.value)"
-		 oninput="translate_z(this.value)"/>
-	</td>
-      </tr>
-      <tr>
-	<td align="right">Specular Color : </td>
-	<td>
-	  <input type="color" id="specula_color"
-		 onchange="set_speculacolor(this.value)" value="#ffffff"/>
+	  <input type="range" id="rotate_x"
+		 min="-180" max="180" value="0" step="1"
+		 onchange="rotate_x(this.value)"
+		 oninput="rotate_x(this.value)"/>
 	</td>
 	<td align="right">Scale Height : </td>
 	<td>
@@ -221,12 +179,54 @@
 		 onchange="scale_y(this.value)"
 		 oninput="scale_y(this.value)"/>
 	</td>
+      </tr>
+      <tr>
+	<td align="right">Diffuse Color : </td>
+	<td>
+	  <input type="color" id="diffuse_color"
+		 onchange="set_diffusecolor(this.value)" value="#ffffff"/>
+	</td>
+	<td align="right">Translate Y : </td>
+	<td>
+	  <input type="range" id="translate_y"
+		 min="-16" max="16" value="0" step="0.1"
+		 onchange="translate_y(this.value)"
+		 oninput="translate_y(this.value)"/>
+	</td>
+	<td align="right">Rotate Y : </td>
+	<td>
+	  <input type="range" id="rotate_y"
+		 min="-180" max="180" value="0" step="1"
+		 onchange="rotate_y(this.value)"
+		 oninput="rotate_y(this.value)"/>
+	</td>
 	<td align="right">Scale Width : </td>
 	<td>
 	  <input type="range" id="scale_x"
 		 min="0.1" max="4.0" value="1.0" step="0.1"
 		 onchange="scale_x(this.value)"
 		 oninput="scale_x(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td align="right">Specular Color : </td>
+	<td>
+	  <input type="color" id="specula_color"
+		 onchange="set_speculacolor(this.value)" value="#ffffff"/>
+	</td>
+	<td align="right">Translate Z : </td>
+	<td>
+	  <input type="range" id="translate_z"
+		 min="-50" max="2" value="0" step="0.1"
+		 onchange="translate_z(this.value)"
+		 oninput="translate_z(this.value)"/>
+	</td>
+	<td align="right">Rotate Z : </td>
+	<td>
+	  <input type="range" id="rotate_z"
+		 min="-180" max="180" value="0" step="1"
+		 onchange="rotate_z(this.value)"
+		 oninput="rotate_z(this.value)"/>
 	</td>
 	<td align="right">Shininess : </td>
 	<td>
