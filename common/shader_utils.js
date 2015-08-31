@@ -117,6 +117,34 @@ function bind_attribute(gl, program , attribute_name , size , attribute)
 }
 
 /**
+ * Bind JavaScript array as vec4 to gpu buffer.
+ * @param {gl} WebGLRenderingContext.
+ * @param {indices} JavaScript array to be bound.
+ * @return {attribute} bound vec4 attribute.
+ */
+function bind_vec4(gl , program , attribute_name , values , attribute)
+{
+    if(!attribute)
+	attribute = gl.getUniformLocation(program , attribute_name);
+    gl.uniform4fv(attribute , new Float32Array(values));
+    return attribute;
+}
+
+/**
+ * Bind matrix to gpu buffer.
+ * @param {gl} WebGLRenderingContext.
+ * @param {indices} mat4 matrix to be bound.
+ * @return {attribute} bound matrix attribute.
+ */
+function bind_matrix(gl , program , attribute_name , matrix , attribute)
+{
+    if(!attribute)
+	u_perspective = gl.getUniformLocation(program , attribute_name);
+    gl.uniformMatrix4fv(u_perspective , false , perspective);
+    return attribute;
+}
+
+/**
  * Bind indices to gpu buffer.
  * @param {gl} WebGLRenderingContext.
  * @param {indices} JavaScript array to be bound.

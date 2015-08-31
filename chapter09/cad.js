@@ -10,28 +10,17 @@ var u_perspective;
 var u_ambient;
 var u_diffuse;
 var u_specula;
-
-var ambient = [1.0 , 1.0 , 1.0 , 1.0];
-var diffuse = [1.0 , 1.0 , 1.0 , 1.0];
-var specula = [1.0 , 1.0 , 1.0 , 1.0];
-
 var u_shiney;
 
-var u_specula_light;
-var specula_light = [0 , 2 , -3 , 0];
-
-var u_diffuse_light;
-var diffuse_light = [0 , 2 , -3 , 0];
-
-var light_ambient = [1.0 , 1.0 , 1.0 , 1.0];
-var light_diffuse = [1.0 , 1.0 , 1.0 , 1.0];
-var light_specula = [1.0 , 1.0 , 1.0 , 1.0];
+var u_lights = [];
+var lights = [];
+var current_light = 0;
 
 var to_radians = Math.PI / 180.0;
 var to_degrees = 180.0 / Math.PI;
 
 var shapes = [];
-var current = 0;
+var current_shape = 0;
 
 window.onload = function init()
 {
@@ -68,43 +57,84 @@ function setup()
 	50.0
     );
 
+
+    u_shiney = gl.getUniformLocation(program , "u_shiney");
+
+    for(var j = 0 ; j < 2 ; j++)
+    {
+	var light = new Light(gl , program);
+	light.name = "Light " + j;
+	lights.push(light);
+    }
+
+    for(var i = 0 ; i < lights.length ; i++)
+    {
+	u_lights[i] = {};
+
+	u_lights[i].position =
+	    gl.getUniformLocation(program , "lights["+i+"].position");
+
+	u_lights[i].ambient =
+	    gl.getUniformLocation(program , "lights["+i+"].ambient");
+
+	u_lights[i].diffuse =
+	    gl.getUniformLocation(program , "lights["+i+"].diffuse");
+
+	u_lights[i].specula =
+	    gl.getUniformLocation(program , "lights["+i+"].specula");
+
+	u_lights[i].enabled =
+	    gl.getUniformLocation(program , "lights["+i+"].enabled");
+    }
+
     update_object_list();
+    update_lights();
+    select_light(current_light);
 }
 
 function render()
 {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    u_perspective = gl.getUniformLocation(program , "u_perspective");
-    gl.uniformMatrix4fv(u_perspective , false , perspective);
+    u_perspective = bind_matrix
+    (gl , program , "u_perspective" , perspective , u_perspective);
 
     for(var j = 0 ; j < shapes.length ; j++)
     {
 	var shape = shapes[j];
 
-	for(var i = 0 ; i < 4 ; i++)
-	    ambient[i] = shape.ambient[i] * light_ambient[i];
-	u_ambient = gl.getUniformLocation(program , "u_ambient");
-	gl.uniform4fv(u_ambient , new Float32Array(ambient));
-
-	for(var i = 0 ; i < 4 ; i++)
-	    diffuse[i] = shape.diffuse[i] * light_diffuse[i];
-	u_diffuse = gl.getUniformLocation(program , "u_diffuse");
-	gl.uniform4fv(u_diffuse , new Float32Array(diffuse));
-
-	for(var i = 0 ; i < 4 ; i++)
-	    specula[i] = shape.specula[i] * light_specula[i];
-	u_specula = gl.getUniformLocation(program , "u_specula");
-	gl.uniform4fv(u_specula , new Float32Array(specula));
-
-	u_shiney = gl.getUniformLocation(program , "u_shiney");
+	u_ambient =
+	    bind_vec4(gl , program , "u_ambient" , shape.ambient , u_ambient);
+	u_diffuse =
+	    bind_vec4(gl , program , "u_diffuse" , shape.diffuse , u_diffuse);
+	u_specula =
+	    bind_vec4(gl , program , "u_specula" , shape.specula , u_specula);
 	gl.uniform1f(u_shiney , shape.shiney);
 
-	u_specula_light = gl.getUniformLocation(program , "u_specula_light");
-	gl.uniform4fv(u_specula_light , new Float32Array(specula_light));
-
-	u_diffuse_light = gl.getUniformLocation(program , "u_diffuse_light");
-	gl.uniform4fv(u_diffuse_light , new Float32Array(diffuse_light));
+	for(var i = 0 ; i < lights.length ; i++)
+	{
+	    u_lights[i].position = bind_vec4
+	    (
+		gl , program , "u_lights[" + i + "].position" ,
+		lights[i].position , u_lights[i].position
+	    );
+	    u_lights[i].ambient = bind_vec4
+	    (
+		gl , program , "u_lights[" + i + "].ambient" ,
+		lights[i].ambient , u_lights[i].ambient
+	    );
+	    u_lights[i].diffuse = bind_vec4
+	    (
+		gl , program , "u_lights[" + i + "].diffuse" ,
+		lights[i].diffuse , u_lights[i].diffuse
+	    );
+	    u_lights[i].specula = bind_vec4
+	    (
+		gl , program , "u_lights[" + i + "].specula" ,
+		lights[i].specula , u_lights[i].specula
+	    );
+	    gl.uniform1i(u_lights[i].enabled , lights[i].enabled);
+	}
 
 	shape.render();
     }
@@ -139,55 +169,55 @@ function create_object(type)
 
 function select_object(item)
 {
-    current = item;
+    current_shape = item;
 
     var input;
 
     input = document.getElementById("select_object");
     input.selectedIndex = item;
 
-    var current_shape = shapes[current];
-    if(!current_shape)
+    var current_object = shapes[current_shape];
+    if(!current_object)
 	return
 
     input = document.getElementById("drawtype");
-    if(current_shape.wireframe && current_shape.fill)
+    if(current_object.wireframe && current_object.fill)
 	input.value = 1;
-    else if(current_shape.wireframe)
+    else if(current_object.wireframe)
 	input.value = 0;
-    else if(current_shape.fill)
+    else if(current_object.fill)
 	input.value = 2;
 
     input = document.getElementById("rotate_x");
-    input.value = current_shape.x_theta * to_degrees;
+    input.value = current_object.x_theta * to_degrees;
     input = document.getElementById("rotate_y");
-    input.value = current_shape.y_theta * to_degrees;
+    input.value = current_object.y_theta * to_degrees;
     input = document.getElementById("rotate_z");
-    input.value = current_shape.z_theta * to_degrees;
+    input.value = current_object.z_theta * to_degrees;
 
     input = document.getElementById("translate_x");
-    input.value = current_shape.x_pos;
+    input.value = current_object.x_pos;
     input = document.getElementById("translate_y");
-    input.value = current_shape.y_pos;
+    input.value = current_object.y_pos;
     input = document.getElementById("translate_z");
-    input.value = current_shape.z_pos;
+    input.value = current_object.z_pos;
 
     input = document.getElementById("ambient_color");
-    input.value = get_color(current_shape.ambient);
+    input.value = get_color(current_object.ambient);
 
     input = document.getElementById("diffuse_color");
-    input.value = get_color(current_shape.diffuse);
+    input.value = get_color(current_object.diffuse);
 
     input = document.getElementById("specula_color");
-    input.value = get_color(current_shape.specula);
+    input.value = get_color(current_object.specula);
 
     input = document.getElementById("shininess");
-    input.value = current_shape.shiney;
+    input.value = current_object.shiney;
 
     input = document.getElementById("scale_x");
-    input.value = current_shape.x_scale;
+    input.value = current_object.x_scale;
     input = document.getElementById("scale_y");
-    input.value = current_shape.y_scale;
+    input.value = current_object.y_scale;
 }
 
 function update_object_list()
@@ -213,12 +243,57 @@ function update_object_list()
 	panel.style.display = 'inline';
 }
 
+function select_light(item)
+{
+    var input = document.getElementById("select_light");
+    input.selectedItem = item;
+
+    current_light = item;
+
+    input = document.getElementById("light_x");
+    input.value = lights[current_light].position[0];
+
+    input = document.getElementById("light_y");
+    input.value = lights[current_light].position[1];
+
+    input = document.getElementById("light_z");
+    input.value = lights[current_light].position[2];
+
+    input = document.getElementById("ambient_light");
+    input.value = get_color(lights[current_light].ambient);
+
+    input = document.getElementById("diffuse_light");
+    input.value = get_color(lights[current_light].diffuse);
+
+    input = document.getElementById("specula_light");
+    input.value = get_color(lights[current_light].specula);
+
+    input = document.getElementById("light_enabled");
+    input.checked = lights[current_light].enabled;
+}
+
+function update_lights()
+{
+    var list = document.getElementById("select_light");
+
+    while(list.firstChild)
+	list.removeChild(list.firstChild);
+
+    for(var i = 0 ; i < lights.length ; i++)
+    {
+	var option = document.createElement("option");
+	option.value = i;
+	option.text = lights[i].name;
+	list.add(option , i);
+    }
+}
+
 function delete_object()
 {
     var j = 0;
     for(var i = 0 ; i < shapes.length ; i++)
     {
-	shapes[j++] = i != current ? shapes[i] : shapes[++i];
+	shapes[j++] = i != current_shape ? shapes[i] : shapes[++i];
     }
     shapes.pop();
 
@@ -230,14 +305,14 @@ function delete_object()
 
 function update_draw_type(type)
 {
-    if(shapes[current])
+    if(shapes[current_shape])
     {
 	if(type == 0)
-	    shapes[current].change_draw_type(true , false);
+	    shapes[current_shape].change_draw_type(true , false);
 	else if(type == 1)
-	    shapes[current].change_draw_type(true , true);
+	    shapes[current_shape].change_draw_type(true , true);
 	else if(type == 2)
-	    shapes[current].change_draw_type(false , true);
+	    shapes[current_shape].change_draw_type(false , true);
 	else
 	    return;
 	render();
@@ -246,108 +321,108 @@ function update_draw_type(type)
 
 function rotate_x(angle)
 {
-    if(shapes[current])
+    if(shapes[current_shape])
     {
-	shapes[current].x_theta = angle * to_radians;
+	shapes[current_shape].x_theta = angle * to_radians;
 	render();
     }
 }
 
 function rotate_y(angle)
 {
-    if(shapes[current])
+    if(shapes[current_shape])
     {
-	shapes[current].y_theta = angle * to_radians;
+	shapes[current_shape].y_theta = angle * to_radians;
 	render();
     }
 }
 
 function rotate_z(angle)
 {
-    if(shapes[current])
+    if(shapes[current_shape])
     {
-	shapes[current].z_theta = angle * to_radians;
+	shapes[current_shape].z_theta = angle * to_radians;
 	render();
     }
 }
 
 function translate_x(pos)
 {
-    if(shapes[current])
+    if(shapes[current_shape])
     {
-	shapes[current].x_pos = pos;
+	shapes[current_shape].x_pos = pos;
 	render();
     }
 }
 
 function translate_y(pos)
 {
-    if(shapes[current])
+    if(shapes[current_shape])
     {
-	shapes[current].y_pos = pos;
+	shapes[current_shape].y_pos = pos;
 	render();
     }
 }
 
 function translate_z(pos)
 {
-    if(shapes[current])
+    if(shapes[current_shape])
     {
-	shapes[current].z_pos = pos;
+	shapes[current_shape].z_pos = pos;
 	render();
     }
 }
 
 function scale_x(pos)
 {
-    if(shapes[current])
+    if(shapes[current_shape])
     {
-	shapes[current].x_scale = pos;
+	shapes[current_shape].x_scale = pos;
 	render();
     }
 }
 
 function scale_y(pos)
 {
-    if(shapes[current])
+    if(shapes[current_shape])
     {
-	shapes[current].y_scale = pos;
+	shapes[current_shape].y_scale = pos;
 	render();
     }
 }
 
 function shininess(pos)
 {
-    if(shapes[current])
+    if(shapes[current_shape])
     {
-	shapes[current].shiney = pos;
+	shapes[current_shape].shiney = pos;
 	render();
     }
 }
 
 function set_ambientcolor(color)
 {
-    if(shapes[current])
+    if(shapes[current_shape])
     {
-	shapes[current].ambient = set_color(color);
+	shapes[current_shape].ambient = set_color(color);
 	render();
     }
 }
 
 function set_diffusecolor(color)
 {
-    if(shapes[current])
+    if(shapes[current_shape])
     {
-	shapes[current].diffuse = set_color(color);
+	shapes[current_shape].diffuse = set_color(color);
 	render();
     }
 }
 
 function set_speculacolor(color)
 {
-    if(shapes[current])
+    if(shapes[current_shape])
     {
-	shapes[current].specula = set_color(color);
+	shapes[current_shape].specula = set_color(color);
 	render();
     }
 }
@@ -360,56 +435,65 @@ function set_bgcolor(color)
     render();
 }
 
-function specula_x(pos)
+function light_x(pos)
 {
-    specula_light[0] = pos;
-    render();
+    if(lights[current_light])
+    {
+	lights[current_light].position[0] = pos;
+	render();
+    }
 }
 
-function specula_y(pos)
+function light_y(pos)
 {
-    specula_light[1] = pos;
-    render();
+    if(lights[current_light])
+    {
+	lights[current_light].position[1] = pos;
+	render();
+    }
 }
 
-function specula_z(pos)
+function light_z(pos)
 {
-    specula_light[2] = pos;
-    render();
+    if(lights[current_light])
+    {
+	lights[current_light].position[2] = pos;
+	render();
+    }
 }
 
-function diffuse_x(pos)
+function light_enabled(enabled)
 {
-    diffuse_light[0] = pos;
-    render();
-}
-
-function diffuse_y(pos)
-{
-    diffuse_light[1] = pos;
-    render();
-}
-
-function diffuse_z(pos)
-{
-    diffuse_light[2] = pos;
-    render();
+    if(lights[current_light])
+    {
+	lights[current_light].enabled = !lights[current_light].enabled;
+	render();
+    }
 }
 
 function set_ambientlight(color)
 {
-    light_ambient = set_color(color);
-    render();
+    if(lights[current_light])
+    {
+	lights[current_light].ambient = set_color(color);
+	render();
+    }
 }
 
 function set_diffuselight(color)
 {
-    light_diffuse = set_color(color);
-    render();
+    if(lights[current_light])
+    {
+	lights[current_light].diffuse = set_color(color);
+	render();
+    }
 }
 
 function set_speculalight(color)
 {
-    light_specula = set_color(color);
-    render();
+    if(lights[current_light])
+    {
+	lights[current_light].specula = set_color(color);
+	render();
+    }
 }
