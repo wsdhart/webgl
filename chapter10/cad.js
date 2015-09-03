@@ -154,23 +154,6 @@ function render()
     }
 }
 
-function create_checkerboard(width , height)
-{
-    var image = [];
-    for(var j = 0 ; j < height ; j++)
-    {
-	for(var i = 0 ; i < width ; i++)
-	{
-	    var c = 255 * (((j & 8) == 0) ^ ((i & 8) == 0));
-	    image.push(c);
-	    image.push(c);
-	    image.push(c);
-	    image.push(255);
-	}
-    }
-    return image;
-}
-
 function create_object(type)
 {
     var element = document.getElementById("create_object");

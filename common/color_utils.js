@@ -104,3 +104,26 @@ function get_color(colors)
 
     return "#" + rs + gs + bs;
 }
+
+/**
+ * Creates a checkerboard pattern array with 8*8 squares.
+ * @param {width} desired width, preferably 2^n >= 2^5.
+ * @param {height} desired height, preferably 2^n >= 2^5.
+ * @return {image} JavaScript array containing a checkerboard pattern.
+ */
+function create_checkerboard(width , height)
+{
+    var image = [];
+    for(var j = 0 ; j < height ; j++)
+    {
+	for(var i = 0 ; i < width ; i++)
+	{
+	    var c = 255 * (((j & 8) == 0) ^ ((i & 8) == 0));
+	    image.push(c);
+	    image.push(c);
+	    image.push(c);
+	    image.push(255);
+	}
+    }
+    return image;
+}
