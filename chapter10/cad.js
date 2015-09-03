@@ -22,6 +22,11 @@ var to_degrees = 180.0 / Math.PI;
 var shapes = [];
 var current_shape = 0;
 
+var texture_image;
+var texture_buffer;
+var texture_width = 128;
+var texture_height = 128;
+
 window.onload = function init()
 {
     canvas = document.getElementById("webgl-canvas");
@@ -87,6 +92,8 @@ function setup()
 	    gl.getUniformLocation(program , "lights["+i+"].enabled");
     }
 
+    texture_image = create_checkerboard(texture_width , texture_height);
+
     update_object_list();
     update_lights();
     select_light(current_light);
@@ -136,8 +143,32 @@ function render()
 	    gl.uniform1i(u_lights[i].enabled , lights[i].enabled);
 	}
 
+	texture_buffer = bind_texture
+	(
+	    gl , program , "u_texture" ,
+	    texture_width , texture_height ,
+	    texture_image , texture_buffer
+	);
+
 	shape.render();
     }
+}
+
+function create_checkerboard(width , height)
+{
+    var image = [];
+    for(var j = 0 ; j < height ; j++)
+    {
+	for(var i = 0 ; i < width ; i++)
+	{
+	    var c = 255 * (((j & 8) == 0) ^ ((i & 8) == 0));
+	    image.push(c);
+	    image.push(c);
+	    image.push(c);
+	    image.push(255);
+	}
+    }
+    return image;
 }
 
 function create_object(type)
