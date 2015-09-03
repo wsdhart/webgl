@@ -75,6 +75,24 @@ Sphere.prototype.create_normals = function()
     this.shape_normals.push(normals);
 }
 
+Sphere.prototype.create_texture = function()
+{
+    var points = [];
+    var horizontals = this.h_slices || 8;
+    var verticals = this.v_slices || 8;
+    for(var lattitude = 0; lattitude <= horizontals ; lattitude++)
+    {
+	for(var longitude = 0; longitude <= verticals ; longitude++)
+	{
+	    var u = 1 - (longitude / verticals);
+	    var v = 1 - (lattitude / horizontals);
+	    points.push(u);
+	    points.push(v);
+	}
+    }
+    this.shape_texture.push(points);
+}
+
 Sphere.prototype.name = function()
 {
     return "Sphere";

@@ -13,6 +13,7 @@ function Shape(gl , program)
     this.shapes = [];
     this.shape_indices = [];
     this.shape_normals = [];
+    this.shape_texture = [];
     var index_buffer;
 
     this.x_theta = 0.0;
@@ -31,6 +32,9 @@ function Shape(gl , program)
 
     var normal_buffer;
     var v_normal;
+
+    var texture_buffer;
+    var a_texture;
 
     this.ambient = [1 , 1 , 1 , 1];
     this.diffuse = [1 , 1 , 1 , 1];
@@ -51,6 +55,7 @@ Shape.prototype.create = function()
     this.create_shapes();
     this.create_indices();
     this.create_normals();
+    this.create_texture();
 
     this.pos_matrix = mat4.create();
     this.pos_matrix = mat4.identity(this.pos_matrix);
@@ -128,6 +133,15 @@ Shape.prototype.subrender = function(primitive)
 	    this.gl , this.program , "v_normal" , 3 , this.v_normal
 	);
 
+	this.texture_buffer = bind_buffer
+	(
+	    this.gl , this.shape_texture[i] , this.texture_buffer
+	);
+	this.a_texture = bind_attribute
+	(
+	    this.gl , this.program , "a_texture" , 2 , this.a_texture
+	);
+
 	this.index_buffer = bind_indices
 	(
 	    this.gl , this.shape_indices[i] , this.index_buffer
@@ -184,4 +198,10 @@ Shape.prototype.create_normals = function()
 {
     var indices = [];
     this.shape_normals.push(normals);
+}
+
+Shape.prototype.create_texture = function()
+{
+    var points = [];
+    this.shape_texture.push(points);
 }
