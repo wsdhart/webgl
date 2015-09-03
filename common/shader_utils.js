@@ -172,3 +172,49 @@ function bind_indices(gl , indices , buffer)
     );
     return buffer;
 }
+
+/**
+ * Bind texture to gpu buffer.
+ * @param {gl} WebGLRenderingContext.
+ * @param {program} WebGLProgram for attribute.
+ * @param {attribute_name} name of attribute in shader to bind.
+ * @param {width} width of image 2^n,
+ * @param {height} height of image 2^n.
+ * @param {image} JavaScript array to be bound.
+ * @param {texture} texture buffer to bind or null.
+ * @param {attribute} attribute to bind or null.
+ * @return {texture} bound texture buffer.
+ */
+function bind_texture
+(gl , program , attribute_name , width , height , image , texture , attribute)
+{
+    if(!texture)
+	texture = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D , texture);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL , true);
+    gl.texImage2D
+    (
+	gl.TEXTURE_2D ,
+	0 ,
+	gl.RGBA ,
+	width , height ,
+	0 ,
+	gl.RGBA ,
+	gl.UNSIGNED_BYTE ,
+	new Uint8Array(image)
+    );
+    gl.generateMipmap(gl.TEXTURE_2D);
+    gl.texParameteri
+    (
+	gl.TEXTURE_2D ,
+	gl.TEXTURE_MIN_FILTER ,
+	gl.NEAREST_MIPMAP_LINEAR
+    );
+    gl.texParameteri(gl.TEXTURE_2D , gl.TEXTURE_MAG_FILTER , gl.NEAREST);
+    if(!attribute)
+	attribute = gl.getUniformLocation(program , attribute_name);
+    gl.uniform1i(attribute , 0);
+
+    return texture;
+}
