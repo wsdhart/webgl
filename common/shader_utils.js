@@ -88,6 +88,7 @@ function shader_from_txt(gl , shader_txt , type)
  * Bind nodes to gpu buffer.
  * @param {gl} WebGLRenderingContext.
  * @param {nodes} JavaScript array to be bound.
+ * @param {buffer} buffer to bind or null.
  * @return {buffer} bound buffer.
  */
 function bind_buffer(gl, nodes , buffer)
@@ -105,6 +106,7 @@ function bind_buffer(gl, nodes , buffer)
  * @param {program} WebGLProgram for attribute.
  * @param {attribute_name} name of attribute in shader to bind.
  * @param {size} number of points per vertex [2|3|4]
+ * @param {attribute} attribute to bind or null.
  * @return {attribute} bound attribute.
  */
 function bind_attribute(gl, program , attribute_name , size , attribute)
@@ -119,7 +121,10 @@ function bind_attribute(gl, program , attribute_name , size , attribute)
 /**
  * Bind JavaScript array as vec4 to gpu buffer.
  * @param {gl} WebGLRenderingContext.
- * @param {indices} JavaScript array to be bound.
+ * @param {program} WebGLProgram for attribute.
+ * @param {attribute_name} name of attribute in shader to bind.
+ * @param {values} 4-dimensional value to bind.
+ * @param {attribute} attribute to bind or null.
  * @return {attribute} bound vec4 attribute.
  */
 function bind_vec4(gl , program , attribute_name , values , attribute)
@@ -133,7 +138,10 @@ function bind_vec4(gl , program , attribute_name , values , attribute)
 /**
  * Bind matrix to gpu buffer.
  * @param {gl} WebGLRenderingContext.
- * @param {indices} mat4 matrix to be bound.
+ * @param {program} WebGLProgram for attribute.
+ * @param {attribute_name} name of attribute in shader to bind.
+ * @param {matrix} mat4 matrix to be bound.
+ * @param {attribute} attribute to bind or null.
  * @return {attribute} bound matrix attribute.
  */
 function bind_matrix(gl , program , attribute_name , matrix , attribute)
@@ -148,6 +156,7 @@ function bind_matrix(gl , program , attribute_name , matrix , attribute)
  * Bind indices to gpu buffer.
  * @param {gl} WebGLRenderingContext.
  * @param {indices} JavaScript array to be bound.
+ * @param {buffer} buffer to bind or null.
  * @return {buffer} bound buffer.
  */
 function bind_indices(gl , indices , buffer)
