@@ -172,14 +172,6 @@ function select_object(item)
     if(!current_object)
 	return
 
-    input = document.getElementById("drawtype");
-    if(current_object.wireframe && current_object.fill)
-	input.value = 1;
-    else if(current_object.wireframe)
-	input.value = 0;
-    else if(current_object.fill)
-	input.value = 2;
-
     input = document.getElementById("rotate_x");
     input.value = current_object.x_theta * to_degrees;
     input = document.getElementById("rotate_y");
@@ -293,22 +285,6 @@ function delete_object()
     select_object(0);
 
     render();
-}
-
-function update_draw_type(type)
-{
-    if(shapes[current_shape])
-    {
-	if(type == 0)
-	    shapes[current_shape].change_draw_type(true , false);
-	else if(type == 1)
-	    shapes[current_shape].change_draw_type(true , true);
-	else if(type == 2)
-	    shapes[current_shape].change_draw_type(false , true);
-	else
-	    return;
-	render();
-    }
 }
 
 function rotate_x(angle)
