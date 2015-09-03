@@ -196,7 +196,7 @@ Shape.prototype.create_indices = function()
 
 Shape.prototype.create_normals = function()
 {
-    var indices = [];
+    var normals = [];
     this.shape_normals.push(normals);
 }
 
