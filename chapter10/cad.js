@@ -54,7 +54,7 @@ function setup()
 	45.0 ,
 	gl.drawingBufferWidth / gl.drawingBufferHeight ,
 	0.001 ,
-	50.0
+	60.0
     );
 
 
@@ -146,16 +146,8 @@ function create_object(type)
     element.selectedIndex = 0;
 
     var shape;
-    if(type == 0)
-	shape = new Cone(gl , program);
-    else if(type == 1)
-	shape = new Cylinder(gl , program);
-    else if(type == 2)
+    if(type == 2)
 	shape = new Sphere(gl , program , 15 , 15);
-    else if(type == 3)
-	shape = new Cube(gl , program);
-    else if(type == 4)
-	shape = new Tetrahedron(gl , program);
     else return ;
 
     shape.create();
