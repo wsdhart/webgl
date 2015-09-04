@@ -33,8 +33,13 @@ function Shape(gl , program)
     var normal_buffer;
     var v_normal;
 
-    var texture_buffer;
     var a_texture;
+    var texture_buffer;
+    var texture_points_buffer;
+
+    this.texture_image;
+    this.texture_width = 0;
+    this.texture_height = 0;
 
     this.ambient = [1 , 1 , 1 , 1];
     this.diffuse = [1 , 1 , 1 , 1];
@@ -133,9 +138,9 @@ Shape.prototype.subrender = function(primitive)
 	    this.gl , this.program , "v_normal" , 3 , this.v_normal
 	);
 
-	this.texture_buffer = bind_buffer
+	this.texture_point_buffer = bind_buffer
 	(
-	    this.gl , this.shape_texture[i] , this.texture_buffer
+	    this.gl , this.shape_texture[i] , this.texture_point_buffer
 	);
 	this.a_texture = bind_attribute
 	(
@@ -152,6 +157,16 @@ Shape.prototype.subrender = function(primitive)
 	    this.program , "u_pos_matrix"
 	);
 	this.gl.uniformMatrix4fv(this.u_pos_matrix , false , this.mov_matrix);
+
+	if(this.texture_image)
+	{
+	    this.texture_buffer = bind_texture
+	    (
+		this.gl , this.program , "u_texture" ,
+		this.texture_width , this.texture_height ,
+		this.texture_image , this.texture_buffer
+	    );
+	}
 
 	this.gl.drawElements
 	(
@@ -204,4 +219,18 @@ Shape.prototype.create_texture = function()
 {
     var points = [];
     this.shape_texture.push(points);
+}
+
+Shape.prototype.set_data_texture = function(array , width , height)
+{
+    this.texture_image = array;
+    this.texture_width = width;
+    this.texture_height = height;
+}
+
+Shape.prototype.set_image_texture = function(image)
+{
+    this.texture_image = image;
+    this.texture_width = 0;
+    this.texture_height = 0;
 }

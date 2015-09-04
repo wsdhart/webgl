@@ -22,11 +22,6 @@ var to_degrees = 180.0 / Math.PI;
 var shapes = [];
 var current_shape = 0;
 
-var texture_image;
-var texture_buffer;
-var texture_width = 128;
-var texture_height = 128;
-
 window.onload = function init()
 {
     canvas = document.getElementById("webgl-canvas");
@@ -92,8 +87,6 @@ function setup()
 	    gl.getUniformLocation(program , "lights["+i+"].enabled");
     }
 
-    texture_image = create_checkerboard(texture_width , texture_height);
-
     update_object_list();
     update_lights();
     select_light(current_light);
@@ -143,13 +136,6 @@ function render()
 	    gl.uniform1i(u_lights[i].enabled , lights[i].enabled);
 	}
 
-	texture_buffer = bind_texture
-	(
-	    gl , program , "u_texture" ,
-	    texture_width , texture_height ,
-	    texture_image , texture_buffer
-	);
-
 	shape.render();
     }
 }
@@ -159,12 +145,32 @@ function create_object(type)
     var element = document.getElementById("create_object");
     element.selectedIndex = 0;
 
-    var shape;
+    var shape , texture;
     if(type == 2)
+    {
 	shape = new Sphere(gl , program , 15 , 15);
+	shape.create();
+    }
+    else if(type == 32)
+    {
+	shape = new Sphere(gl , program , 15 , 15);
+	shape.create();
+	texture = create_checkerboard(64 , 64);
+	shape.set_data_texture(texture , 64 , 64);
+    }
+    else if(type == 64)
+    {
+	shape = new Sphere(gl , program , 15 , 15);
+	shape.create();
+	var funk = function()
+	{
+	    shape.set_image_texture(texture);
+	    render();
+	}
+	texture = load_image("moon.gif", funk);
+    }
     else return ;
 
-    shape.create();
     shapes.push(shape);
 
     update_object_list();

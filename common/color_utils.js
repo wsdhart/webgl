@@ -127,3 +127,17 @@ function create_checkerboard(width , height)
     }
     return image;
 }
+
+/**
+ * Loads an image with callback.
+ * param {src} source of the image.
+ * param {callback} callback function.
+ * return {image} returns the loaded image var.
+ */
+function load_image(src , callback)
+{
+    var image = new Image();
+    image.onload = callback;
+    image.src = src;
+    return image;
+}

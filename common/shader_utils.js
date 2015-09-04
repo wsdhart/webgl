@@ -178,43 +178,69 @@ function bind_indices(gl , indices , buffer)
  * @param {gl} WebGLRenderingContext.
  * @param {program} WebGLProgram for attribute.
  * @param {attribute_name} name of attribute in shader to bind.
- * @param {width} width of image 2^n,
- * @param {height} height of image 2^n.
- * @param {image} JavaScript array to be bound.
+ * @param {width} width of image array 2^n, or 0 for bitmap image.
+ * @param {height} height of image array 2^n, or 0 for bitmap image.
+ * @param {image} JavaScript array, or bitmap image, to be bound.
  * @param {texture} texture buffer to bind or null.
+ * @param {unit} texture unit to use, or null for 0.
  * @param {attribute} attribute to bind or null.
  * @return {texture} bound texture buffer.
  */
 function bind_texture
-(gl , program , attribute_name , width , height , image , texture , attribute)
+(
+    gl , program , attribute_name ,
+    width , height , image ,
+    texture , unit , attribute
+)
 {
     if(!texture)
 	texture = gl.createTexture();
-    gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D , texture);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL , true);
-    gl.texImage2D
-    (
-	gl.TEXTURE_2D ,
-	0 ,
-	gl.RGBA ,
-	width , height ,
-	0 ,
-	gl.RGBA ,
-	gl.UNSIGNED_BYTE ,
-	new Uint8Array(image)
-    );
+    if(width > 0 && height > 0)
+    {
+	gl.texImage2D
+	(
+	    gl.TEXTURE_2D ,
+	    0 ,
+	    gl.RGBA ,
+	    width , height ,
+	    0 ,
+	    gl.RGBA ,
+	    gl.UNSIGNED_BYTE ,
+	    new Uint8Array(image)
+	);
+    }
+    else
+    {
+	gl.texImage2D
+	(
+	    gl.TEXTURE_2D , 0 , gl.RGBA , gl.RGBA , gl.UNSIGNED_BYTE , image
+	);
+    }
+
     gl.generateMipmap(gl.TEXTURE_2D);
+
     gl.texParameteri
     (
 	gl.TEXTURE_2D ,
 	gl.TEXTURE_MIN_FILTER ,
 	gl.NEAREST_MIPMAP_LINEAR
     );
-    gl.texParameteri(gl.TEXTURE_2D , gl.TEXTURE_MAG_FILTER , gl.NEAREST);
+    gl.texParameteri
+    (
+	gl.TEXTURE_2D ,
+	gl.TEXTURE_MAG_FILTER ,
+	gl.NEAREST
+    );
+
     if(!attribute)
 	attribute = gl.getUniformLocation(program , attribute_name);
-    gl.uniform1i(attribute , 0);
+
+    if(!unit)
+	unit = 0;
+    gl.uniform1i(attribute , unit);
+    gl.activeTexture(gl.TEXTURE0 + unit);
 
     return texture;
 }
