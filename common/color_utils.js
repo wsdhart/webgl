@@ -118,7 +118,7 @@ function create_checkerboard(width , height)
     {
 	for(var i = 0 ; i < width ; i++)
 	{
-	    var c = 255 * (((j & 8) == 0) ^ ((i & 8) == 0));
+	    var c = (((j & 8) == 0) ^ ((i & 8) == 0)) ? 224 : 32;
 	    image.push(c);
 	    image.push(c);
 	    image.push(c);
