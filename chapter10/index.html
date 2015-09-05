@@ -50,8 +50,7 @@
 	else
 		L = normalize(lights[0].position.xyz);
 
-	distance = 4.0 /
-		sqrt(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z);
+	distance = 4.0 / length(diff);
 
 	v_texture = a_texture;
 	ambient_light = lights[0].ambient;
