@@ -11,7 +11,7 @@
     <script type="text/javascript" src="cad.js"></script>
 
     <script id="vertex-shader" type="x-shader/x-vertex">
-      const int n_lights = 2;
+      const int n_lights = 1;
 
       struct light
       {
@@ -30,69 +30,33 @@
       uniform mat4 u_pos_matrix;
       uniform mat4 u_perspective;
 
-      uniform vec4 u_ambient;
-      uniform vec4 u_diffuse;
-      uniform vec4 u_specula;
-      uniform float u_shiney;
-
-      varying vec4 f_color;
       varying vec4 v_texture;
+      varying vec3 E , N , L;
+      varying float distance;
+      varying vec4 ambient_light , diffuse_light , specula_light;
 
-      vec4 ambient , diffuse , specula;
-      vec4 ambient_sum , diffuse_sum , specula_sum;
-
-      float lights_div;
       void main()
       {
 	gl_Position = u_perspective * u_pos_matrix * v_position;
 
 	vec3 pos = (u_pos_matrix * v_position).xyz;
 
-	vec3 E = -normalize(pos);
-	vec3 N = normalize(mat3(u_pos_matrix) * v_normal.xyz);
+	E = -normalize(pos);
+	N = normalize(mat3(u_pos_matrix) * v_normal.xyz);
+	vec3 diff = lights[0].position.xyz - pos;
 
-	vec3 L;
-	for(int i = 0 ; i < n_lights ; i++)
-	{
-		lights_div += 1.0;
-		if(lights[i].enabled)
-		{
-			ambient_sum += lights[i].ambient * u_ambient
-				* (1.0 / (gl_Position.z / 4.0));
+	if(lights[0].position.w != 0.0)
+		L = normalize(diff);
+	else
+		L = normalize(lights[0].position.xyz);
 
-			if(lights[i].position.z == 0.0)
-				L = normalize(lights[i].position.xyz);
-			else
-				L = normalize(lights[i].position.xyz - pos);
+	distance = 4.0 /
+		sqrt(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z);
 
-			vec3 diff = gl_Position.xyz - L;
-			float distance = 2.0 / sqrt
-			(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z);
-
-			float Kd = max(dot(L , N) , 0.0);
-			diffuse_sum += Kd * lights[i].diffuse
-							* u_diffuse * distance;
-
-			if(Kd > 0.0)
-			{
-				vec3 H = normalize(L + E);
-				float Ks =
-					pow(max(dot(N , H) , 0.0) , u_shiney);
-				specula_sum += Ks * lights[i].specula
-							* u_specula * distance;
-			}
-			else
-			{
-				specula_sum += vec4(0.0 , 0.0 , 0.0 , 1.0);
-			}
-		}
-	}
-	ambient = ambient_sum / lights_div;
-	diffuse = diffuse_sum / lights_div;
-	specula = specula_sum / lights_div;
-	f_color = ambient + diffuse + specula;
-	f_color.a = 1.0;
 	v_texture = a_texture;
+	ambient_light = lights[0].ambient;
+	diffuse_light = lights[0].diffuse;
+	specula_light = lights[0].specula;
       }
     </script>
     <script id="fragment-shader" type="x-shader/x-fragment">
@@ -102,11 +66,42 @@
 	precision mediump float;
       #endif
 
+      uniform vec4 u_ambient;
+      uniform vec4 u_diffuse;
+      uniform vec4 u_specula;
+      uniform float u_shiney;
+
       uniform sampler2D u_texture;
-      varying vec4 f_color;
+
       varying vec4 v_texture;
+      varying vec3 E , N , L;
+      varying float distance;
+      varying vec4 ambient_light , diffuse_light , specula_light;
+
+      vec4 ambient , diffuse , specula;
+      vec4 f_color;
+      float lights_div;
       void main()
       {
+	ambient = u_ambient * distance * ambient_light;
+
+	float Kd = max(dot(L , N) , 0.0);
+	diffuse = Kd * u_diffuse * distance * diffuse_light;
+
+	if(Kd >  0.0)
+	{
+		vec3 H = normalize(L + E);
+		float Ks =
+			pow(max(dot(N , H) , 0.0) , u_shiney);
+		specula = Ks * u_specula * distance * specula_light;
+	}
+	else
+	{
+		specula = vec4(0.0 , 0.0 , 0.0 , 1.0);
+	}
+
+	f_color = ambient + diffuse + specula;
+
 	gl_FragColor = f_color * texture2D(u_texture , v_texture.xy);
       }
     </script>
@@ -253,11 +248,6 @@
 		 onchange="light_x(this.value)"
 		 oninput="light_x(this.value)"/>
 	</td>
-	<td align="right">Select Light : </td>
-	<td>
-	  <select id="select_light" onchange="select_light(this.value)">
-	  </select>
-	</td>
       </tr>
       <tr>
 	<td align="right">Diffuse Light : </td>
@@ -271,11 +261,6 @@
 		 min="-16" max="16" value="2" step="0.1"
 		 onchange="light_y(this.value)"
 		 oninput="light_y(this.value)"/>
-	</td>
-	<td align="right">Enabled ? : </td>
-	<td>
-	  <input type="checkbox" id="light_enabled" checked
-		 onchange="light_enabled(this.value)"/>
 	</td>
       </tr>
       <tr>

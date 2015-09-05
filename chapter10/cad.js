@@ -60,7 +60,7 @@ function setup()
 
     u_shiney = gl.getUniformLocation(program , "u_shiney");
 
-    for(var j = 0 ; j < 2 ; j++)
+    for(var j = 0 ; j < 1 ; j++)
     {
 	var light = new Light(gl , program);
 	light.name = "Light " + j;
@@ -88,8 +88,6 @@ function setup()
     }
 
     update_object_list();
-    update_lights();
-    select_light(current_light);
 }
 
 function render()
