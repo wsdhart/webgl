@@ -10,6 +10,9 @@ function Shape(gl , program)
 
     var mov_matrix;
 
+    var nor_matrix;
+    var u_nor_matrix;
+
     this.shapes = [];
     this.shape_indices = [];
     this.shape_normals = [];
@@ -71,6 +74,9 @@ Shape.prototype.create = function()
 
     this.mov_matrix = mat4.create();
 
+    this.nor_matrix = mat3.create();
+    this.nor_matrix = mat3.normalFromMat4(this.nor_matrix , this.pos_matrix);
+
     this.created = true;
 }
 
@@ -105,6 +111,8 @@ Shape.prototype.update_matrices = function()
 	this.mov_matrix , this.mov_matrix ,
 	[this.x_scale , this.y_scale , this.x_scale]
     );
+
+    this.nor_matrix = mat3.normalFromMat4(this.nor_matrix , this.mov_matrix);
 }
 
 Shape.prototype.render = function()
@@ -157,6 +165,12 @@ Shape.prototype.subrender = function(primitive)
 	    this.program , "u_pos_matrix"
 	);
 	this.gl.uniformMatrix4fv(this.u_pos_matrix , false , this.mov_matrix);
+
+	this.u_nor_matrix = this.gl.getUniformLocation
+	(
+	    this.program , "u_nor_matrix"
+	);
+	this.gl.uniformMatrix3fv(this.u_nor_matrix , false , this.nor_matrix);
 
 	if(this.texture_image)
 	{

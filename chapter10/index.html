@@ -29,6 +29,7 @@
 
       uniform mat4 u_pos_matrix;
       uniform mat4 u_perspective;
+      uniform mat3 u_nor_matrix;
 
       varying vec4 v_texture;
       varying vec3 E , N , L;
@@ -42,7 +43,7 @@
 	vec3 pos = (u_pos_matrix * v_position).xyz;
 
 	E = -normalize(pos);
-	N = normalize(mat3(u_pos_matrix) * v_normal.xyz);
+	N = normalize(u_nor_matrix * v_normal.xyz);
 	vec3 diff = lights[0].position.xyz - pos;
 
 	if(lights[0].position.w != 0.0)
