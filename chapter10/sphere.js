@@ -6,6 +6,7 @@ function Sphere(gl , program , h_slices , v_slices)
     this.program = program;
     this.h_slices = h_slices;
     this.v_slices = v_slices;
+    this.id = "Sphere";
 }
 
 Sphere.prototype = new Shape();
@@ -91,9 +92,4 @@ Sphere.prototype.create_texture = function()
 	}
     }
     this.shape_texture.push(points);
-}
-
-Sphere.prototype.name = function()
-{
-    return "Sphere";
 }

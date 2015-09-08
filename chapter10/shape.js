@@ -5,6 +5,8 @@ function Shape(gl , program)
     this.gl = gl;
     this.program = program;
 
+    this.id = "Unknown";
+
     var pos_matrix;
     var u_pos_matrix;
 
@@ -194,7 +196,7 @@ Shape.prototype.subrender = function(primitive)
 
 Shape.prototype.name = function()
 {
-    return "Unknown";
+    return this.id;
 }
 
 Shape.prototype.size = function()
