@@ -27,6 +27,7 @@
       attribute vec4 v_normal;
       attribute vec4 a_texture;
 
+      uniform int mapping;
       uniform mat4 u_pos_matrix;
       uniform mat4 u_perspective;
       uniform mat3 u_nor_matrix;
@@ -53,7 +54,11 @@
 
 	distance = 4.0 / length(diff);
 
-	v_texture = a_texture;
+	if(mapping == 1)
+		v_texture = v_position;
+	else
+		v_texture = a_texture;
+
 	ambient_light = lights[0].ambient;
 	diffuse_light = lights[0].diffuse;
 	specula_light = lights[0].specula;
@@ -126,8 +131,14 @@
 	    <!--
 	    <option value="2">Sphere</option>
 	    -->
-	    <option value="32">Checkerboard Sphere</option>
-	    <option value="64">Moon</option>
+	    <option value="16">Checkerboard Sphere</option>
+	    <option value="32">Mercury</option>
+	    <option value="64">Venus</option>
+	    <option value="128">Earth</option>
+	    <option value="256">Moon</option>
+	    <option value="512">Mars</option>
+	    <option value="1024">Jupiter</option>
+	    <option value="2048">Neptune</option>
 	  </select>
 	</td>
 	<td align="right">Select Object : </td>
@@ -145,6 +156,12 @@
 	  <input type="color" id="bg_color"
 		 onchange="set_bgcolor(this.value)" value="#000000"/>
 	</td>
+	<td align="right">Mapping : </td>
+	<td>
+	  <select id="mapping" onchange="select_mapping(this.value)">
+	    <option value="0" selected>Regular</option>
+	    <option value="1">Planar</option>
+	  </select>
       </tr>
     </table>
     <table cellpadding="4" id="object_panel">
@@ -244,7 +261,7 @@
 	<td align="right">Light X : </td>
 	<td>
 	  <input type="range" id="light_x"
-		 min="-16" max="16" value="0" step="0.1"
+		 min="-8" max="8" value="0" step="0.1"
 		 onchange="light_x(this.value)"
 		 oninput="light_x(this.value)"/>
 	</td>
@@ -258,7 +275,7 @@
 	<td align="right">Light Y : </td>
 	<td>
 	  <input type="range" id="light_y"
-		 min="-16" max="16" value="2" step="0.1"
+		 min="-8" max="8" value="2" step="0.1"
 		 onchange="light_y(this.value)"
 		 oninput="light_y(this.value)"/>
 	</td>

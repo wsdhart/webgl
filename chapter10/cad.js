@@ -22,6 +22,8 @@ var to_degrees = 180.0 / Math.PI;
 var shapes = [];
 var current_shape = 0;
 
+var mapping = 0;
+
 window.onload = function init()
 {
     canvas = document.getElementById("webgl-canvas");
@@ -134,6 +136,9 @@ function render()
 	    gl.uniform1i(u_lights[i].enabled , lights[i].enabled);
 	}
 
+	var u_mapping = gl.getUniformLocation(program , "mapping");
+	gl.uniform1i(u_mapping , mapping);
+
 	shape.render();
     }
 }
@@ -144,28 +149,85 @@ function create_object(type)
     element.selectedIndex = 0;
 
     var shape , texture;
+    var funk = function()
+    {
+	shape.set_image_texture(texture);
+	render();
+    }
+
     if(type == 2)
     {
 	shape = new Sphere(gl , program , 15 , 15);
 	shape.create();
     }
+    else if(type == 16)
+    {
+	shape = new Sphere(gl , program , 15 , 15);
+	shape.create();
+	shape.id = "Checkerboard Sphere";
+	texture = create_checkerboard(64 , 64);
+	shape.set_data_texture(texture , 64 , 64);
+    }
     else if(type == 32)
     {
 	shape = new Sphere(gl , program , 15 , 15);
 	shape.create();
-	texture = create_checkerboard(64 , 64);
-	shape.set_data_texture(texture , 64 , 64);
+	shape.id = "Mercury";
+	shape.x_scale = 0.2;
+	shape.y_scale = 0.2;
+	texture = load_image("mercury.jpg", funk);
     }
     else if(type == 64)
     {
 	shape = new Sphere(gl , program , 15 , 15);
 	shape.create();
-	var funk = function()
-	{
-	    shape.set_image_texture(texture);
-	    render();
-	}
+	shape.id = "Venus";
+	shape.x_scale = 0.8;
+	shape.y_scale = 0.8;
+	texture = load_image("venus.jpg", funk);
+    }
+    else if(type == 128)
+    {
+	shape = new Sphere(gl , program , 15 , 15);
+	shape.create();
+	shape.id = "Earth";
+	texture = load_image("earth.jpg", funk);
+    }
+    else if(type == 256)
+    {
+	shape = new Sphere(gl , program , 15 , 15);
+	shape.create();
+	shape.id = "Moon";
+	shape.x_scale = 0.1;
+	shape.y_scale = 0.1;
 	texture = load_image("moon.gif", funk);
+    }
+    else if(type == 512)
+    {
+	shape = new Sphere(gl , program , 15 , 15);
+	shape.create();
+	shape.id = "Mars";
+	shape.x_scale = 0.4;
+	shape.y_scale = 0.4;
+	texture = load_image("mars.jpg", funk);
+    }
+    else if(type == 1024)
+    {
+	shape = new Sphere(gl , program , 15 , 15);
+	shape.create();
+	shape.id = "Jupiter";
+	shape.x_scale = 2.0;
+	shape.y_scale = 2.0;
+	texture = load_image("jupiter.jpg", funk);
+    }
+    else if(type == 2048)
+    {
+	shape = new Sphere(gl , program , 15 , 15);
+	shape.create();
+	shape.id = "Neptune";
+	shape.x_scale = 1.5;
+	shape.y_scale = 1.5;
+	texture = load_image("neptune.jpg", funk);
     }
     else return ;
 
@@ -482,4 +544,10 @@ function set_speculalight(color)
 	lights[current_light].specula = set_color(color);
 	render();
     }
+}
+
+function select_mapping(type)
+{
+    mapping = type;
+    render();
 }
