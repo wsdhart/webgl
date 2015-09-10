@@ -124,26 +124,13 @@
     <br/>
     <table bgcolor="#DDDDDD" cellpadding="3" id="objects_panel">
       <tr>
-	<td align="right">Create Object : </td>
-	<td>
-	  <select id="create_object" onchange="create_object(this.value)">
-	    <option selected>---</option>
-	    <!--
-	    <option value="2">Sphere</option>
-	    -->
-	    <option value="16">Checkerboard Sphere</option>
-	    <option value="256">Moon</option>
-	  </select>
 	</td>
-	<td align="right">Select Object : </td>
+	<td align="right">Select Texture : </td>
 	<td>
-	  <select id="select_object" onchange="select_object(this.value)">
+	  <select id="select_texture" onchange="select_texture(this.value)">
+	    <option value="0" selected>Checkerboard</option>
+	    <option value="1">Moon</option>
 	  </select>
-	</td>
-	<td>&nbsp;</td>
-	<td>
-	  <input type="button" id="delete_object" value="Delete Object"
-		 onclick="delete_object()"/>
 	</td>
 	<td align="right">Background Color : </td>
 	<td>

@@ -89,7 +89,7 @@ function setup()
 	    gl.getUniformLocation(program , "lights["+i+"].enabled");
     }
 
-    update_object_list();
+    create_object();
 }
 
 function render()
@@ -143,174 +143,37 @@ function render()
     }
 }
 
-function create_object(type)
+function create_object()
 {
-    var element = document.getElementById("create_object");
-    element.selectedIndex = 0;
-
     var shape , texture;
-    var funk = function()
+
+    shape = new Sphere(gl , program , 15 , 15);
+    shape.create();
+    shapes = [];
+    shapes.push(shape);
+    select_texture(0);
+}
+
+function select_texture(type)
+{
+    var shape = shapes[0];
+    if(!type || type == 0)
     {
-	shape.set_image_texture(texture);
+	var texture = create_checkerboard(64 , 64);
+	shape.id = "Checkerboard Sphere";
+	shape.set_data_texture(texture , 64 , 64);
 	render();
     }
-
-    if(type == 2)
+    else if(type == 1)
     {
-	shape = new Sphere(gl , program , 15 , 15);
-	shape.create();
+	var image = new Image();
+	image.onload = function()
+	{
+	    shape.set_image_texture(image);
+	    render();
+	}
+	image.src = "moon.gif";
     }
-    else if(type == 16)
-    {
-	shape = new Sphere(gl , program , 15 , 15);
-	shape.create();
-	shape.id = "Checkerboard Sphere";
-	texture = create_checkerboard(64 , 64);
-	shape.set_data_texture(texture , 64 , 64);
-    }
-    else if(type == 256)
-    {
-	shape = new Sphere(gl , program , 15 , 15);
-	shape.create();
-	shape.id = "Moon";
-	texture = load_image("moon.gif", funk);
-    }
-    else return ;
-
-    shapes.push(shape);
-
-    update_object_list();
-    select_object(shapes.length - 1);
-
-    render();
-}
-
-function select_object(item)
-{
-    current_shape = item;
-
-    var input;
-
-    input = document.getElementById("select_object");
-    input.selectedIndex = item;
-
-    var current_object = shapes[current_shape];
-    if(!current_object)
-	return
-
-    input = document.getElementById("rotate_x");
-    input.value = current_object.x_theta * to_degrees;
-    input = document.getElementById("rotate_y");
-    input.value = current_object.y_theta * to_degrees;
-    input = document.getElementById("rotate_z");
-    input.value = current_object.z_theta * to_degrees;
-
-    input = document.getElementById("translate_x");
-    input.value = current_object.x_pos;
-    input = document.getElementById("translate_y");
-    input.value = current_object.y_pos;
-    input = document.getElementById("translate_z");
-    input.value = current_object.z_pos;
-
-    input = document.getElementById("ambient_color");
-    input.value = get_color(current_object.ambient);
-
-    input = document.getElementById("diffuse_color");
-    input.value = get_color(current_object.diffuse);
-
-    input = document.getElementById("specula_color");
-    input.value = get_color(current_object.specula);
-
-    input = document.getElementById("shininess");
-    input.value = current_object.shiney;
-
-    input = document.getElementById("scale_x");
-    input.value = current_object.x_scale;
-    input = document.getElementById("scale_y");
-    input.value = current_object.y_scale;
-}
-
-function update_object_list()
-{
-    var list = document.getElementById("select_object");
-
-    while(list.firstChild)
-	list.removeChild(list.firstChild);
-
-    for(var i = 0 ; i < shapes.length ; i++)
-    {
-	var option = document.createElement("option");
-	option.value = i;
-	option.text = shapes[i].name();
-	list.add(option , i);
-    }
-
-    var panel = document.getElementById("object_panel");
-
-    if(shapes.length == 0)
-	panel.style.display = 'none';
-    else
-	panel.style.display = 'inline';
-}
-
-function select_light(item)
-{
-    var input = document.getElementById("select_light");
-    input.selectedItem = item;
-
-    current_light = item;
-
-    input = document.getElementById("light_x");
-    input.value = lights[current_light].position[0];
-
-    input = document.getElementById("light_y");
-    input.value = lights[current_light].position[1];
-
-    input = document.getElementById("light_z");
-    input.value = lights[current_light].position[2];
-
-    input = document.getElementById("ambient_light");
-    input.value = get_color(lights[current_light].ambient);
-
-    input = document.getElementById("diffuse_light");
-    input.value = get_color(lights[current_light].diffuse);
-
-    input = document.getElementById("specula_light");
-    input.value = get_color(lights[current_light].specula);
-
-    input = document.getElementById("light_enabled");
-    input.checked = lights[current_light].enabled;
-}
-
-function update_lights()
-{
-    var list = document.getElementById("select_light");
-
-    while(list.firstChild)
-	list.removeChild(list.firstChild);
-
-    for(var i = 0 ; i < lights.length ; i++)
-    {
-	var option = document.createElement("option");
-	option.value = i;
-	option.text = lights[i].name;
-	list.add(option , i);
-    }
-}
-
-function delete_object()
-{
-    var j = 0;
-    for(var i = 0 ; i < shapes.length ; i++)
-    {
-	shapes[j++] = i != current_shape ? shapes[i] : shapes[++i];
-    }
-    shapes.pop();
-
-    update_object_list();
-    select_object(0);
-
-    render();
 }
 
 function rotate_x(angle)
