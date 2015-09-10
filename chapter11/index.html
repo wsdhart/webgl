@@ -1,0 +1,293 @@
+<html>
+  <head>
+    <title>Week 11</title>
+    <script type="text/javascript" src="../common/webgl-utils.js"></script>
+    <script type="text/javascript" src="../common/shader_utils.js"></script>
+    <script type="text/javascript" src="../common/gl-matrix.js"></script>
+    <script type="text/javascript" src="../common/color_utils.js"></script>
+    <script type="text/javascript" src="shape.js"></script>
+    <script type="text/javascript" src="sphere.js"></script>
+    <script type="text/javascript" src="light.js"></script>
+    <script type="text/javascript" src="cad.js"></script>
+
+    <script id="vertex-shader" type="x-shader/x-vertex">
+      const int n_lights = 1;
+
+      struct light
+      {
+	vec4 position;
+	vec4 ambient;
+	vec4 diffuse;
+	vec4 specula;
+	bool enabled;
+      };
+      uniform light lights[n_lights];
+
+      attribute vec4 v_position;
+      attribute vec4 v_normal;
+      attribute vec4 a_texture;
+
+      uniform int mapping;
+      uniform mat4 u_pos_matrix;
+      uniform mat4 u_perspective;
+      uniform mat3 u_nor_matrix;
+
+      varying vec4 v_texture;
+      varying vec3 E , N , L;
+      varying float distance;
+      varying vec4 ambient_light , diffuse_light , specula_light;
+
+      void main()
+      {
+	gl_Position = u_perspective * u_pos_matrix * v_position;
+
+	vec3 pos = (u_pos_matrix * v_position).xyz;
+
+	E = -normalize(pos);
+	N = normalize(u_nor_matrix * v_normal.xyz);
+	vec3 diff = lights[0].position.xyz - pos;
+
+	if(lights[0].position.w != 0.0)
+		L = normalize(diff);
+	else
+		L = normalize(lights[0].position.xyz);
+
+	distance = 4.0 / length(diff);
+
+	if(mapping == 1)
+		v_texture = v_position;
+	else
+		v_texture = a_texture;
+
+	ambient_light = lights[0].ambient;
+	diffuse_light = lights[0].diffuse;
+	specula_light = lights[0].specula;
+      }
+    </script>
+    <script id="fragment-shader" type="x-shader/x-fragment">
+      #ifdef GL_FRAGMENT_SHADER_PRECISION_HIGH
+	precision highp float;
+      #else
+	precision mediump float;
+      #endif
+
+      uniform vec4 u_ambient;
+      uniform vec4 u_diffuse;
+      uniform vec4 u_specula;
+      uniform float u_shiney;
+
+      uniform sampler2D u_texture;
+
+      varying vec4 v_texture;
+      varying vec3 E , N , L;
+      varying float distance;
+      varying vec4 ambient_light , diffuse_light , specula_light;
+
+      vec4 ambient , diffuse , specula;
+      vec4 f_color;
+      float lights_div;
+      void main()
+      {
+	ambient = u_ambient * distance * ambient_light;
+
+	float Kd = max(dot(L , N) , 0.0);
+	diffuse = Kd * u_diffuse * distance * diffuse_light;
+
+	if(Kd >  0.0)
+	{
+		vec3 H = normalize(L + E);
+		float Ks =
+			pow(max(dot(N , H) , 0.0) , u_shiney);
+		specula = Ks * u_specula * distance * specula_light;
+	}
+	else
+	{
+		specula = vec4(0.0 , 0.0 , 0.0 , 1.0);
+	}
+
+	f_color = ambient + diffuse + specula;
+
+	gl_FragColor = f_color * texture2D(u_texture , v_texture.xy);
+      }
+    </script>
+
+    <noscript>JavaScript is required to view this page's content.</noscript>
+  </head>
+  <body>
+    <h1>Who Stole the Tarts?</h1>
+    <div align="center">
+      <canvas id="webgl-canvas" width="384" height="384">
+	<img src="../images/hatter.png"/><br/>
+	<b>HTML5 is required to view this page's content.</b>
+      </canvas>
+    </div>
+    <br/>
+    <table bgcolor="#DDDDDD" cellpadding="3" id="objects_panel">
+      <tr>
+	<td align="right">Create Object : </td>
+	<td>
+	  <select id="create_object" onchange="create_object(this.value)">
+	    <option selected>---</option>
+	    <!--
+	    <option value="2">Sphere</option>
+	    -->
+	    <option value="16">Checkerboard Sphere</option>
+	    <option value="256">Moon</option>
+	  </select>
+	</td>
+	<td align="right">Select Object : </td>
+	<td>
+	  <select id="select_object" onchange="select_object(this.value)">
+	  </select>
+	</td>
+	<td>&nbsp;</td>
+	<td>
+	  <input type="button" id="delete_object" value="Delete Object"
+		 onclick="delete_object()"/>
+	</td>
+	<td align="right">Background Color : </td>
+	<td>
+	  <input type="color" id="bg_color"
+		 onchange="set_bgcolor(this.value)" value="#000000"/>
+	</td>
+	<td align="right">Mapping : </td>
+	<td>
+	  <select id="mapping" onchange="select_mapping(this.value)">
+	    <option value="0" selected>Regular</option>
+	    <option value="1">Planar</option>
+	  </select>
+      </tr>
+    </table>
+    <table cellpadding="4" id="object_panel">
+      <tr>
+	<td align="right">Ambient Color : </td>
+	<td>
+	  <input type="color" id="ambient_color"
+		 onchange="set_ambientcolor(this.value)" value="#ffffff"/>
+	</td>
+	<td align="right">Translate X : </td>
+	<td>
+	  <input type="range" id="translate_x"
+		 min="-16" max="16" value="0" step="0.1"
+		 onchange="translate_x(this.value)"
+		 oninput="translate_x(this.value)"/>
+	</td>
+	<td align="right">Rotate X : </td>
+	<td>
+	  <input type="range" id="rotate_x"
+		 min="-180" max="180" value="0" step="1"
+		 onchange="rotate_x(this.value)"
+		 oninput="rotate_x(this.value)"/>
+	</td>
+	<td align="right">Scale Height : </td>
+	<td>
+	  <input type="range" id="scale_y"
+		 min="0.1" max="4.0" value="1.0" step="0.1"
+		 onchange="scale_y(this.value)"
+		 oninput="scale_y(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td align="right">Diffuse Color : </td>
+	<td>
+	  <input type="color" id="diffuse_color"
+		 onchange="set_diffusecolor(this.value)" value="#ffffff"/>
+	</td>
+	<td align="right">Translate Y : </td>
+	<td>
+	  <input type="range" id="translate_y"
+		 min="-16" max="16" value="0" step="0.1"
+		 onchange="translate_y(this.value)"
+		 oninput="translate_y(this.value)"/>
+	</td>
+	<td align="right">Rotate Y : </td>
+	<td>
+	  <input type="range" id="rotate_y"
+		 min="-180" max="180" value="0" step="1"
+		 onchange="rotate_y(this.value)"
+		 oninput="rotate_y(this.value)"/>
+	</td>
+	<td align="right">Scale Width : </td>
+	<td>
+	  <input type="range" id="scale_x"
+		 min="0.1" max="4.0" value="1.0" step="0.1"
+		 onchange="scale_x(this.value)"
+		 oninput="scale_x(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td align="right">Specular Color : </td>
+	<td>
+	  <input type="color" id="specula_color"
+		 onchange="set_speculacolor(this.value)" value="#ffffff"/>
+	</td>
+	<td align="right">Translate Z : </td>
+	<td>
+	  <input type="range" id="translate_z"
+		 min="-50" max="2" value="0" step="0.1"
+		 onchange="translate_z(this.value)"
+		 oninput="translate_z(this.value)"/>
+	</td>
+	<td align="right">Rotate Z : </td>
+	<td>
+	  <input type="range" id="rotate_z"
+		 min="-180" max="180" value="0" step="1"
+		 onchange="rotate_z(this.value)"
+		 oninput="rotate_z(this.value)"/>
+	</td>
+	<td align="right">Shininess : </td>
+	<td>
+	  <input type="range" id="shininess"
+		 min="1" max="200" value="20" step="1"
+		 onchange="shininess(this.value)"
+		 oninput="shininess(this.value)"/>
+	</td>
+      </tr>
+    </table>
+    <br/>
+    <table bgcolor="#BBBBBB" cellpadding="4" id="light_panel">
+      <tr>
+	<td align="right">Ambient Light : </td>
+	<td>
+	  <input type="color" id="ambient_light"
+		 onchange="set_ambientlight(this.value)" value="#ffffff"/>
+	</td>
+	<td align="right">Light X : </td>
+	<td>
+	  <input type="range" id="light_x"
+		 min="-8" max="8" value="0" step="0.1"
+		 onchange="light_x(this.value)"
+		 oninput="light_x(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td align="right">Diffuse Light : </td>
+	<td>
+	  <input type="color" id="diffuse_light"
+		 onchange="set_diffuselight(this.value)" value="#ffffff"/>
+	</td>
+	<td align="right">Light Y : </td>
+	<td>
+	  <input type="range" id="light_y"
+		 min="-8" max="8" value="2" step="0.1"
+		 onchange="light_y(this.value)"
+		 oninput="light_y(this.value)"/>
+	</td>
+      </tr>
+      <tr>
+	<td align="right">Specular Light : </td>
+	<td>
+	  <input type="color" id="specula_light"
+		 onchange="set_speculalight(this.value)" value="#ffffff"/>
+	</td>
+	<td align="right">Light Z : </td>
+	<td>
+	  <input type="range" id="light_z"
+		 min="-90" max="3" value="-5" step="0.1"
+		 onchange="light_z(this.value)"
+		 oninput="light_z(this.value)"/>
+	</td>
+      </tr>
+    </table>
+  </body>
+</html>
